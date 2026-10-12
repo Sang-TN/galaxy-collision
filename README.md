@@ -1,0 +1,64 @@
+# Galaxienkollision – Milchstraße × Andromeda
+
+Eine 3D-N-Körper-Simulation in C++ mit raylib: Zwei Scheibengalaxien kollidieren und bilden dabei Gezeitenarme.
+
+Abschlussprojekt zum staatlich geprüften IT-Assistenten an der Höheren Berufsfachschule Informationstechnik, BBS 1 Mainz.
+
+> **Stand:** Das Projekt wird gerade eingerichtet (Meilenstein M0). Es gibt noch keinen lauffähigen Code.
+
+## Worum es geht
+
+Wenn zwei Galaxien aneinander vorbeiziehen, reißt die Schwerkraft lange Sternströme aus den Scheiben, die sogenannten Gezeitenarme. Dieses Projekt simuliert einen solchen Vorbeiflug und zeigt ihn in Echtzeit in 3D.
+
+Vorbild ist das Modell von Toomre und Toomre (1972), das dieses Verhalten schon mit sehr einfachen Annahmen nachbilden konnte.
+
+Der Schwerpunkt liegt auf der Informatik: Algorithmen, Datenstrukturen, Laufzeitmessung und eine saubere objektorientierte Architektur.
+
+## Geplanter Umfang
+
+| Stufe | Inhalt | Rechenaufwand |
+|---|---|---|
+| 1 (Pflicht) | Zwei schwere Galaxienzentren und zehntausende masselose Teststerne in rotierenden Scheiben | O(N) |
+| 2 (Kür) | Alle Sterne ziehen sich gegenseitig an: erst Brute Force, dann Barnes-Hut mit Octree | O(N²), dann O(N log N) |
+
+## Meilensteine
+
+- [ ] **M0 – Setup:** Git, CMake, raylib, ein leeres Fenster
+- [ ] **M1 – Punkte im Raum:** eigene `Vec3`-Klasse, Teilchenspeicher, drehbare Kamera
+- [ ] **M2 – Eine stabile Galaxie:** Teststerne auf Kreisbahnen um ein Zentrum
+- [ ] **M3 – Toomre-Kollision:** zwei Galaxien, prograde und retrograde Szenarien
+- [ ] **M4 – Brute-Force-Eigengravitation:** mit Energieüberwachung
+- [ ] **M5 – Barnes-Hut:** Octree, Kraftfehler und Laufzeitvergleich
+- [ ] **M6 – Snapshots:** Simulation speichern und abspielen
+- [ ] **M7 – Kür:** Halo, Parallelisierung, Video
+
+## Technik
+
+- C++20
+- CMake ab Version 3.20
+- raylib für Fenster und 3D-Darstellung
+- doctest für Tests
+- clang-format für einheitliche Formatierung
+
+## Bauen und Starten
+
+Die Anleitung folgt, sobald M0 abgeschlossen ist.
+
+## Dokumentation
+
+| Datei | Inhalt |
+|---|---|
+| [docs/theorie.md](docs/theorie.md) | Physikalische und informatische Grundlagen, Herleitungen |
+| [docs/entscheidungen.md](docs/entscheidungen.md) | Entscheidungen mit Alternativen und Begründung |
+| [docs/tests.md](docs/tests.md) | Tests und Messwerte |
+| [docs/projekttagebuch.md](docs/projekttagebuch.md) | Arbeitsprotokoll pro Sitzung |
+| [docs/ki-protokoll.md](docs/ki-protokoll.md) | Kennzeichnung der KI-Nutzung |
+| [docs/quellen.md](docs/quellen.md) | Quellenverzeichnis |
+
+## KI-Nutzung
+
+In diesem Projekt wird ein KI-Assistent als Lernhilfe eingesetzt, für Erklärungen, Herleitungen und Code-Review. Der Programmcode wird selbst geschrieben. Jede relevante Nutzung ist in [docs/ki-protokoll.md](docs/ki-protokoll.md) festgehalten.
+
+## Quelle
+
+Toomre, Alar; Toomre, Juri (1972), „Galactic Bridges and Tails“, The Astrophysical Journal, Jahrgang 178, Seiten 623–666.

@@ -231,7 +231,8 @@ Quellenangabe im Literaturverzeichnis: *Anbieter (Jahr), Name des KI-Systems, Mo
 
 ## 11. Aktueller Stand
 
-- **M0 läuft.** Erledigt: lokales Git-Repo, `.gitignore`, erster Commit.
-- **Nächster Schritt:** `docs/`-Dateien und README-Gerüst anlegen, danach CMake-Projekt.
+- **M0 läuft.** Erledigt: lokales Git-Repo, `.gitignore`, `docs/`-Gerüst, README, erste Einträge in Projekttagebuch und KI-Protokoll.
+- **Nächster Schritt:** CMake-Projekt mit raylib per FetchContent, danach GitHub-Repo und erster Push.
+- **Offen mit dem Betreuer:** Abgabetermin, Umgang mit KI-Nutzung und Selbstständigkeitserklärung.
 - Noch kein Code implementiert.
 - Parallel früh beginnen: `docs/theorie.md` und Zeitplanung (siehe 9.2).
