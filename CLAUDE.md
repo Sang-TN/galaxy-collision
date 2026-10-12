@@ -231,5 +231,7 @@ Quellenangabe im Literaturverzeichnis: *Anbieter (Jahr), Name des KI-Systems, Mo
 
 ## 11. Aktueller Stand
 
-- Noch nichts implementiert. **Nächster Schritt: M0.**
+- **M0 läuft.** Erledigt: lokales Git-Repo, `.gitignore`, erster Commit.
+- **Nächster Schritt:** `docs/`-Dateien und README-Gerüst anlegen, danach CMake-Projekt.
+- Noch kein Code implementiert.
 - Parallel früh beginnen: `docs/theorie.md` und Zeitplanung (siehe 9.2).
