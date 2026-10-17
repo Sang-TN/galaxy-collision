@@ -20,3 +20,12 @@
 - **KI-Ausgabe (zusammengefasst):** Vollständige `README.md` mit Kurzbeschreibung, Umfang, Meilensteinen, Technik und Dokumentationsübersicht.
 - **Zweck:** Ansprechende Projektübersicht für das Repository.
 - **Eigene Bearbeitung und Überprüfung:** Durchgelesen und inhaltlich mit `CLAUDE.md` abgeglichen.
+
+## 17.10.2026 - CMake
+
+- **KI-System:** Claude Code, Anthropic, Modell Claude Opus 5.5
+- **Datum:** 17.10.2026
+- **Prompt:** „okay will am projekt weiter arbeiten, … was wäre der nächste schritt“ und die Folge-Prompts zur Durchsicht der `CMakeLists.txt`
+- **Ausgabe:** Erklärung von CMake, FetchContent, Target und Out-of-Source-Build; Hinweise auf Syntaxfehler in der eigenen `CMakeLists.txt` (fehlendes VERSION, Komma als Trennzeichen, fehlender Target-Name, absoluter Pfad)
+- **Zweck:** Verständnis des Build-Systems, Code-Review
+- **Eigene Bearbeitung:** `CMakeLists.txt` und `viewer.cpp` selbst geschrieben und nach den Hinweisen selbst korrigiert, Build selbst getestet

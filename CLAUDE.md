@@ -231,8 +231,8 @@ Quellenangabe im Literaturverzeichnis: *Anbieter (Jahr), Name des KI-Systems, Mo
 
 ## 11. Aktueller Stand
 
-- **M0 läuft.** Erledigt: lokales Git-Repo, `.gitignore`, `docs/`-Gerüst, README, erste Einträge in Projekttagebuch und KI-Protokoll.
-- **Nächster Schritt:** CMake-Projekt mit raylib per FetchContent, danach GitHub-Repo und erster Push.
+- **M0 läuft.** Erledigt: lokales Git-Repo, `.gitignore`, `docs/`-Gerüst, README, erste Einträge in Projekttagebuch und KI-Protokoll. CMake installiert, minimales CMake-Projekt (C++20, Target `viewer` aus `apps/viewer.cpp`, gibt „Hallo Galaxie“ aus), Out-of-Source-Build in `build/`. raylib 5.5 per FetchContent (Git-Tag) eingebunden, `viewer` öffnet ein schwarzes 1280×720-Fenster (Game Loop).
+- **Nächster Schritt:** GitHub-Repo erstellen und erster Push → damit ist M0 abgeschlossen (danach Kolloquiumsfragen zu M0).
 - **Offen mit dem Betreuer:** Abgabetermin, Umgang mit KI-Nutzung und Selbstständigkeitserklärung.
-- Noch kein Code implementiert.
+- Noch keine Simulationslogik implementiert.
 - Parallel früh beginnen: `docs/theorie.md` und Zeitplanung (siehe 9.2).
