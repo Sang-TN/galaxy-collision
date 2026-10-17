@@ -29,3 +29,12 @@
 - **Ausgabe:** Erklärung von CMake, FetchContent, Target und Out-of-Source-Build; Hinweise auf Syntaxfehler in der eigenen `CMakeLists.txt` (fehlendes VERSION, Komma als Trennzeichen, fehlender Target-Name, absoluter Pfad)
 - **Zweck:** Verständnis des Build-Systems, Code-Review
 - **Eigene Bearbeitung:** `CMakeLists.txt` und `viewer.cpp` selbst geschrieben und nach den Hinweisen selbst korrigiert, Build selbst getestet
+
+## 17.10.2026 - raylib
+
+- **KI-System:** Claude Code, Anthropic, Claude Opus 5.5
+- **Datum:** 17.10.2026
+- **Prompt:** Fragen zur Versionierung von raylib und Bitte um Durchsicht von CMakeLists.txt und viewer.cpp („schau mal drüber“, „jetzt?“)
+- **Ausgabe:** Erklärung von Git-Tag, Commit-Hash und FetchContent; Konzept der Game Loop als Pseudocode; Hinweise auf Fehler (Deklaration statt Aufruf, Code außerhalb von main, Python-Syntax, Groß-/Kleinschreibung)
+- **Zweck:** Einbinden einer Bibliothek verstehen, Code-Review
+- **Eigene Bearbeitung:** Code selbst geschrieben, raylib-Funktionen selbst im Cheatsheet gesucht, Fehler nach Hinweisen selbst korrigiert, Build und Fenster selbst getestet
