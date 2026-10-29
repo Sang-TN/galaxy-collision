@@ -23,7 +23,13 @@ Position, Geschwindigkeit und Beschleunigung sind Vektoren. Die Geschwindigkeit 
 
 ### 2.2 Skalar
 
-Eine normale Zahl ohne Richtung heißt **Skalar**. Beispiele in der Simulation: Zeit, Masse, die Gravitationskonstante G.
+Eine normale Zahl ohne Richtung heißt Skalar. Beispiele in der Simulation: Zeit, Masse, die Gravitationskonstante G.
+
+Skalar ist kein Punkt. Ein Punkt im Raum braucht drei Zahlen (x, y, z) und ist damit ein Vektor. Ein Skalar ist nur eine einzige Zahl.
+
+Ein Abstand hat keine Richtung. „Der Bäcker ist 500 m entfernt“ sagt, wie weit, aber nicht, wohin. Deshalb ist der Betrag eines Vektors (siehe 3.5) ein Skalar: Aus dem Pfeil (3, 4, 0) mit Richtung und Länge wird nur noch die Länge 5. Die Richtung geht verloren.
+
+Skalar ist nicht dasselbe wie Konstante. Skalar heißt: eine einzelne Zahl ohne Richtung. Konstante heißt: ein Wert, der sich nie ändert. Das sind zwei unabhängige Eigenschaften.
 
 ## 3 Rechenoperationen mit Vektoren
 
@@ -120,3 +126,61 @@ a  =  ─────────────────────
  
 Die Addition im Nenner ist **keine** Vektoraddition, denn |r|² ist bereits eine Zahl. Das Ergebnis a ist ein Vektor: die Beschleunigung, die auf den Stern wirkt. G, M und ε werden in M2 erklärt.
 
+
+## 4 Umsetzung in C++: Operatorüberladung
+
+### 4.1 Problem
+
+Für eingebaute Datentypen wie `int` oder `float` weiß C++, was `+` bedeutet. Für eine eigene Klasse wie `Vec3` weiß der Compiler das nicht. Der Ausdruck `position + geschwindigkeit` erzeugt ohne weitere Angaben einen Fehler.
+
+### 4.2 Lösung
+
+Mit **Operatorüberladung** (engl. *operator overloading*) wird festgelegt, was ein Operator für eine eigene Klasse bedeutet. Ein Operator ist in C++ eine Funktion mit besonderem Namen. Der Compiler übersetzt
+
+`a + b`  →  sinngemäß `a.operator+(b)`
+
+`operator+` ist also eine normale Methode, die mit dem Zeichen `+` aufgerufen werden kann.
+
+Das Objekt, auf dem die Methode aufgerufen wird (bei `a + b` ist das `a`), heißt in C++ **`this`**. Es ist eine versteckte zusätzliche Eingabe.
+
+### 4.3 Pseudocode
+
+**Addition:**
+
+```
+FUNKTION operator+ (anderer Vektor)
+    neuer Vektor mit:
+        x = mein x + anderes x
+        y = mein y + anderes y
+        z = mein z + anderes z
+    gib neuen Vektor zurück
+```
+
+**Skalarmultiplikation:**
+
+```
+FUNKTION operator* (Skalar)
+    neuer Vektor mit:
+        x = mein x · Skalar
+        y = mein y · Skalar
+        z = mein z · Skalar
+    gib neuen Vektor zurück
+```
+
+### 4.4 Ein- und Ausgaben aller Operationen
+
+| Operation | Methode | Eingabe (außer `this`) | Rückgabe |
+|---|---|---|---|
+| Addition | `operator+` | ein `Vec3` | neues `Vec3` |
+| Subtraktion | `operator-` | ein `Vec3` | neues `Vec3` |
+| Skalarmultiplikation | `operator*` | eine Zahl (`float`) | neues `Vec3` |
+| Division | `operator/` | eine Zahl (`float`) | neues `Vec3` |
+| Betrag | `length()` | keine | eine Zahl (`float`) |
+
+Eine Funktion kann in C++ nur **einen** Wert zurückgeben. Weil x, y und z in einem Objekt gebündelt sind, kann trotzdem ein ganzer Vektor zurückgegeben werden.
+
+### 4.5 Die Ausgangsvektoren bleiben unverändert
+
+Die Operatoren `+`, `-`, `*` und `/` verändern weder `this` noch die Eingabe, sondern erzeugen ein **neues** Objekt, genau wie bei `3 + 4`, wo 3 und 4 ebenfalls unverändert bleiben.
+
+Beispiel, warum das wichtig ist: In `position + geschwindigkeit * dt` würde ein `operator*`, der `this` verändert, die Geschwindigkeit selbst mit dt multiplizieren und überschreiben. Bei dt = 0,01 wäre der Stern nach jedem Schritt hundertmal langsamer und bliebe fast sofort stehen.
