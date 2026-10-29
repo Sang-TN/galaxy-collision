@@ -184,3 +184,12 @@ Eine Funktion kann in C++ nur **einen** Wert zurückgeben. Weil x, y und z in ei
 Die Operatoren `+`, `-`, `*` und `/` verändern weder `this` noch die Eingabe, sondern erzeugen ein **neues** Objekt, genau wie bei `3 + 4`, wo 3 und 4 ebenfalls unverändert bleiben.
 
 Beispiel, warum das wichtig ist: In `position + geschwindigkeit * dt` würde ein `operator*`, der `this` verändert, die Geschwindigkeit selbst mit dt multiplizieren und überschreiben. Bei dt = 0,01 wäre der Stern nach jedem Schritt hundertmal langsamer und bliebe fast sofort stehen.
+
+### 4.6 Header und Quelldatei, Inlining
+ 
+- **Header (`.hpp`):** enthält die Deklaration, also die Schnittstelle der Klasse. Er sagt, *was* die Klasse kann. Andere Dateien binden ihn mit `#include` ein, damit der Compiler die Klasse kennt.
+- **Quelldatei (`.cpp`):** enthält die Implementierung, also *wie* die Methoden arbeiten.
+- Jede `.cpp` wird einzeln übersetzt (eine **Übersetzungseinheit**). Der **Linker** verbindet am Ende alle Teile zu einem Programm.
+**Inlining:** Sieht der Compiler den Rumpf einer kleinen Funktion, kann er ihn direkt an die Aufrufstelle kopieren. Dadurch entfällt der Funktionsaufruf (Sprung hin und zurück). Das ist nur möglich, wenn der Rumpf in derselben Übersetzungseinheit sichtbar ist, also im Header steht.
+ 
+Für `Vec3`, dessen Operatoren millionenfach pro Sekunde aufgerufen werden, wird deshalb die **header-only**-Variante gewählt: Deklaration und Implementierung stehen gemeinsam in `src/core/vec3.hpp` (Begründung in `docs/entscheidungen.md`).
