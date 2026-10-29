@@ -38,3 +38,12 @@
 - **Ausgabe:** Erklärung von Git-Tag, Commit-Hash und FetchContent; Konzept der Game Loop als Pseudocode; Hinweise auf Fehler (Deklaration statt Aufruf, Code außerhalb von main, Python-Syntax, Groß-/Kleinschreibung)
 - **Zweck:** Einbinden einer Bibliothek verstehen, Code-Review
 - **Eigene Bearbeitung:** Code selbst geschrieben, raylib-Funktionen selbst im Cheatsheet gesucht, Fehler nach Hinweisen selbst korrigiert, Build und Fenster selbst getestet
+
+## 29.10.2026 - Codespaces-Setup und Vektoren für Vec3
+
+- **KI-System:** Claude (claude.ai), Anthropic, Claude Opus 5.5
+- **Datum:** 29.10.2026
+- **Prompt:** Fragen zum Arbeiten mit CMake und raylib in GitHub Codespaces („kann ich auf codespace überhaupt damit arbeiten“), Bitte um Erklärung des Vorgehens in M1 („ich muss erstmal selber verstehen, was ich genau jetzt machen muss“), Bitte um Strukturierung der eigenen Notizen in `theorie.md`
+- **Ausgabe:** Hinweise zu fehlenden Linux-Paketen (RandR/X11-Header) und zur fehlenden Grafikausgabe in Codespaces; Kolloquiumsfragen zu M0 mit Bewertung; schrittweise Erklärung von Vektoren, Skalaren und Vektoroperationen (Addition, Subtraktion, Skalarmultiplikation, Division, Betrag über den Satz des Pythagoras) mit Übungsfragen; Zuordnung der Operationen zur Gravitationsformel; gegliederte Fassung von `theorie.md`
+- **Zweck:** Entwicklungsumgebung einrichten, mathematische Grundlagen für die Klasse `Vec3` verstehen, Theoriekapitel vorbereiten
+- **Eigene Bearbeitung:** Build-Fehler selbst im Terminal behoben; Kolloquiumsfragen 1–3 selbst beantwortet; Rechenaufgaben (Abstandsvektor, Betrag in 2D und 3D) selbst gelöst, nach Hinweisen Fehler selbst korrigiert; Notizen selbst erstellt, Gliederung von der KI übernommen, Text wird für die Dokumentation in eigenen Worten umgeschrieben
