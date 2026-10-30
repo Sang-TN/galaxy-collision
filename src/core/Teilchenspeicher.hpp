@@ -2,6 +2,7 @@
 #include "core/vec3.hpp"
 #include <vector>
 #include <cstddef>
+#include <span>
 
 class Teilchenspeicher
 {
@@ -20,5 +21,15 @@ public:
     std::size_t anzahl() const
     {
         return positionen_.size();
+    }
+
+    std::span<Vec3> positionen()
+    {
+        return positionen_;
+    }
+
+    std::span<const Vec3> positionen() const
+    {
+        return positionen_;
     }
 };
