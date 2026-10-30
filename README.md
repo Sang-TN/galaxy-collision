@@ -4,7 +4,7 @@ Eine 3D-N-Körper-Simulation in C++ mit raylib: Zwei Scheibengalaxien kollidiere
 
 Abschlussprojekt zum staatlich geprüften IT-Assistenten an der Höheren Berufsfachschule Informationstechnik, BBS 1 Mainz.
 
-> **Stand:** Das Projekt wird gerade eingerichtet (Meilenstein M0). Es gibt noch keinen lauffähigen Code.
+> **Stand:** M0 (Setup) ist abgeschlossen, M1 (Punkte im Raum) läuft. Die Vektorklasse `Vec3` ist fertig und getestet, eine Simulation gibt es noch nicht.
 
 ## Worum es geht
 
@@ -40,9 +40,40 @@ Der Schwerpunkt liegt auf der Informatik: Algorithmen, Datenstrukturen, Laufzeit
 - doctest für Tests
 - clang-format für einheitliche Formatierung
 
+## Projektstruktur
+
+```
+galaxy-collision/
+├── CMakeLists.txt     # Build-Konfiguration, bindet raylib per FetchContent ein
+├── apps/
+│   └── viewer.cpp     # Programm mit Fenster (Live-Ansicht)
+├── src/
+│   └── core/
+│       └── vec3.hpp   # Vektorklasse für Positionen, Geschwindigkeiten, Beschleunigungen
+└── docs/              # Dokumentation (siehe unten)
+```
+
+Geplant sind weitere Module unter `src/`: `physics/` (Kraftberechnung), `integrator/` (Zeitschritte), `setup/` (Startbedingungen), `io/` (Snapshots) und `render/` (Darstellung), außerdem `tests/` und `bench/`.
+
 ## Bauen und Starten
 
-Die Anleitung folgt, sobald M0 abgeschlossen ist.
+Voraussetzungen: C++20-Compiler, CMake ab Version 3.20, Git. raylib wird beim ersten Konfigurieren automatisch heruntergeladen.
+
+Unter Linux werden zusätzlich die X11-/OpenGL-Entwicklungspakete benötigt:
+
+```
+sudo apt install libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libgl1-mesa-dev
+```
+
+Konfigurieren, bauen und starten:
+
+```
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+./build/viewer
+```
+
+Hinweis: In Umgebungen ohne Bildschirm (z. B. GitHub Codespaces) lässt sich das Programm bauen, das Fenster öffnet sich aber nicht.
 
 ## Dokumentation
 
