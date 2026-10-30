@@ -18,6 +18,7 @@ Jede Entscheidung folgt dem Schema **Entscheidung → Alternativen → Begründu
 
 *Noch zu ergänzen: Warum der feste Tag `5.5` statt des neuesten Stands?*
 
+
 ---
 
 ## E2 – Eigene Klasse `Vec3` statt einzelner Zahlen oder raylibs `Vector3` (M1)
@@ -42,6 +43,7 @@ Benötigte Operationen (Herleitung in `theorie.md`, Abschnitte 3 und 4):
 | Division | Vektor / Skalar |
 | Betrag | Vektor → Skalar |
 
+
 ---
 
 ## E3 – `Vec3` als header-only-Klasse (M1)
@@ -55,6 +57,7 @@ Benötigte Operationen (Herleitung in `theorie.md`, Abschnitte 3 und 4):
 - Die Operatoren sind sehr klein und werden pro Zeitschritt für zehntausende Sterne aufgerufen, also millionenfach pro Sekunde.
 - Steht der Funktionsrumpf im Header, kann der Compiler ihn per **Inlining** direkt an die Aufrufstelle kopieren. Der Funktionsaufruf entfällt.
 - Bei einer Aufteilung sieht der Compiler beim Übersetzen anderer Dateien nur die Deklaration und kann nicht inlinen (siehe `theorie.md`, Abschnitt 4.6).
+
 
 ---
 
@@ -74,6 +77,7 @@ Benötigte Operationen (Herleitung in `theorie.md`, Abschnitte 3 und 4):
 
 *Zu überprüfen in M4:* Ob sich die Rundungsfehler über viele Zeitschritte in der Energiedrift bemerkbar machen. Gegebenenfalls Vergleichsmessung `float` gegen `double`.
 
+
 ---
 
 ## E5 – `class` mit öffentlichen Attributen (M1)
@@ -88,6 +92,7 @@ Benötigte Operationen (Herleitung in `theorie.md`, Abschnitte 3 und 4):
 - Direkter Zugriff wie `v.x` hält die Formeln im Code kurz und lesbar.
 - `class` statt `struct`: Aus dem Unterricht vertraut. Technisch sind beide gleichwertig, da die Sichtbarkeit ausdrücklich mit `public:` festgelegt wird.
 **Zusätzlich:** Die Attribute haben den Startwert 0, damit `Vec3 v;` den Nullvektor (0, 0, 0) ergibt statt zufälliger Werte aus dem Speicher.
+
 
 ---
  
@@ -104,6 +109,7 @@ Benötigte Operationen (Herleitung in `theorie.md`, Abschnitte 3 und 4):
 - Der kritische Fall wird bereits durch die Gravitationsformel verhindert: Durch das **Softening** ε ist der Nenner (|r|² + ε²)^(3/2) auch bei |r| = 0 nie 0.
 - Verantwortlich für gültige Eingaben ist der Aufrufer, nicht der Vektor.
 
+
 ---
  
 ## E7 – `src` als Include-Verzeichnis (M1)
@@ -118,6 +124,7 @@ Benötigte Operationen (Herleitung in `theorie.md`, Abschnitte 3 und 4):
 - Der Modulpfad im `#include` zeigt sofort, zu welchem Teil der Architektur ein Header gehört (z. B. `core/` oder `physics/`).
 - Ein einziger Eintrag reicht für alle späteren Module. Gleichnamige Dateien in verschiedenen Modulen geraten nicht in Konflikt.
 **Unterschied `include` und `link`:** `target_include_directories` sagt dem **Compiler**, wo er Header findet. `target_link_libraries` sagt dem **Linker**, welche fertigen Bibliotheken eingebunden werden.
+
 
 ---
  
@@ -139,6 +146,7 @@ Benötigte Operationen (Herleitung in `theorie.md`, Abschnitte 3 und 4):
 - Gegenmaßnahme: Die Kapselung liegt eine Ebene höher. Eine Klasse für den ganzen Teilchenspeicher besitzt die Arrays und ist als einzige dafür zuständig, dass sie synchron bleiben.
 *Hinweis:* Bei nur Position und Geschwindigkeit (24 Byte pro Stern) ist der Geschwindigkeitsvorteil in Stufe 1 voraussichtlich klein. Eine Messung AoS gegen SoA wäre eine mögliche Ergänzung für `tests.md`.
 
+
 ---
 
 ## E9 – Teilchenspeicher: `private` Vektoren (M1)
@@ -151,6 +159,7 @@ Benötigte Operationen (Herleitung in `theorie.md`, Abschnitte 3 und 4):
 **Begründung:**
 - Anders als bei `Vec3` gibt es hier eine **Invariante**: Alle drei Vektoren müssen immer gleich lang und gleich sortiert sein. Wären sie `public`, könnte jemand von außen z. B. nur `positionen.push_back(...)` aufrufen. Dann gehörten Position und Geschwindigkeit eines Index nicht mehr zum selben Stern, ohne Fehlermeldung.
 - Mit `private` gibt es genau eine Stelle (`hinzufuegen`), die alle drei Vektoren gemeinsam verändert.
+
 
 ---
  
@@ -168,4 +177,22 @@ Benötigte Operationen (Herleitung in `theorie.md`, Abschnitte 3 und 4):
 - `std::span` erlaubt genau das Benötigte: Werte ändern, aber nicht die Größe. Es kopiert nichts.
 - Bezug zu E8 (SoA): Der `span` liefert alle Positionen als zusammenhängenden Bereich, gut für Cache und Zeichnen.
 - `std::span` ist Teil von C++20, das im Projekt ohnehin verwendet wird.
+
+
+---
+ 
+## E11 – Zufällige Punktwolke mit festem Seed (M1)
+ 
+**Entscheidung:** Startpositionen für M1 erzeugt die freie Funktion `zufaelligePunkte` in `src/setup/zufall.hpp` mit `std::mt19937` und `std::uniform_real_distribution`. Der Seed wird als Parameter übergeben, im Test ist er fest (`42`).
+ 
+**Alternativen:**
+- `rand()` aus C
+- Seed aus der Uhrzeit oder `std::random_device` (bei jedem Start andere Werte)
+- Eine Klasse statt einer freien Funktion
+**Begründung:**
+- `<random>` ist der moderne C++-Standard, `rand()` gilt als veraltet und hat schlechte Qualität.
+- Ein fester Seed macht Läufe **reproduzierbar**: Fehler lassen sich wiederholen, Ergebnisse vergleichen und Tests liefern immer dasselbe Ergebnis.
+- Die Funktion hat keinen eigenen Zustand, den sie über mehrere Aufrufe behalten müsste. Eine freie Funktion reicht, eine Klasse wäre Overkill.
+- Startbedingungen liegen laut Architektur in `src/setup/`.
+**Einschränkung:** Die Umrechnung durch `uniform_real_distribution` unterscheidet sich zwischen Standardbibliotheken. Reproduzierbar ist es auf demselben System (siehe `theorie.md` 6.2).
 

@@ -221,7 +221,6 @@ Bei `a + b` gilt damit:
 Abgrenzung zu ähnlichen Schlüsselwörtern:
 - **`final`** verbietet, dass eine Unterklasse die Methode überschreibt (Vererbung).
 - **`static`** macht eine Methode unabhängig von einem Objekt, sie hat dann kein `this`.
-
 ### 4.9 Endlose Rekursion
  
 **Rekursion** bedeutet, dass eine Funktion sich selbst aufruft. Ohne Abbruchbedingung ruft sie sich endlos auf, bis der Speicher für Funktionsaufrufe (der **Stack**) voll ist und das Programm mit einem **Stack Overflow** abstürzt.
@@ -307,25 +306,80 @@ Sind die Vektoren `private`, brauchen andere Programmteile einen kontrollierten 
 `std::span` funktioniert, weil `std::vector` seine Elemente zusammenhängend speichert.
 
 ### 5.4 Objekte anlegen: benannt, temporär und eine Falle
- 
+
 **Benanntes Objekt:** `Teilchenspeicher speicher;` legt ein Objekt mit Namen an. Es existiert bis zum Ende des umgebenden Blocks `{ }` und kann in mehreren Zeilen benutzt werden.
- 
+
 **Temporäres Objekt:** `Teilchenspeicher()` erzeugt ein namenloses Objekt, das am Ende der Zeile wieder gelöscht wird. Typischer Fehler:
- 
+
 ```
 Teilchenspeicher().hinzufuegen(v, v1);            // Objekt 1: Stern hinein, danach gelöscht
 std::cout << Teilchenspeicher().anzahl();         // Objekt 2: neu und leer → Ausgabe 0
 ```
- 
+
 Richtig ist ein benanntes Objekt, das in beiden Zeilen verwendet wird.
- 
+
 **Most Vexing Parse:** `Vec3 v2();` erzeugt **keinen** Nullvektor. C++ liest die Zeile als Deklaration einer Funktion `v2`, die ein `Vec3` zurückgibt. Ein Objekt mit Standardkonstruktor wird **ohne** Klammern angelegt: `Vec3 v2;`
- 
+
 ### 5.5 `std::vector`: Elemente anhängen und zählen
- 
+
 - **`liste.push_back(element)`** hängt ein Element hinten an. Vor dem Punkt steht die Liste, **an die** angehängt wird, in den Klammern das Element, **das** angehängt wird.
 - **`liste.size()`** gibt die Anzahl der Elemente zurück, als `std::size_t`.
 - **`std::size_t`** (definiert in `<cstddef>`) ist ein **vorzeichenloser** ganzzahliger Typ (*unsigned*), der nie negativ wird. Er ist der übliche Typ für Größen und Anzahlen.
+
 **Regel für Includes:** Was eine Datei benutzt, bindet sie selbst ein, auch wenn es zufällig schon über einen anderen Header mitkommt.
- 
+
 Im Teilchenspeicher hängt `hinzufuegen` an **alle drei** Listen genau ein Element an. Deshalb reicht in `anzahl()` die Abfrage **einer** Liste.
+
+### 5.6 Getter mit und ohne `const` (Überladung)
+
+Zwei Methoden dürfen denselben Namen haben, wenn sie sich unterscheiden. Das nennt man **Überladung**. Beim Teilchenspeicher unterscheiden sich die beiden `positionen()` nur durch das `const` hinter der Klammer:
+
+| Methode | Rückgabe | Zweck |
+|---|---|---|
+| `positionen()` | `std::span<Vec3>` | Werte ändern (Physik) |
+| `positionen() const` | `std::span<const Vec3>` | nur lesen (Darstellung) |
+
+Der Compiler wählt automatisch: Ist das Objekt `const`, wird die lesende Variante benutzt.
+
+Ein Unterschied **nur im Rückgabetyp** reicht nicht, weil der Compiler beim Aufruf `speicher.positionen()` den Rückgabetyp nicht sieht. Eine `const`-Methode darf außerdem keinen `span<Vec3>` herausgeben, sonst könnte der Aufrufer das Objekt darüber verändern und das Versprechen von `const` wäre gebrochen.
+
+## 6 Zufällige Startpositionen
+
+### 6.1 Pseudozufall und Seed
+
+Ein Computer erzeugt keinen echten Zufall. Ein **Pseudozufallszahlengenerator** berechnet aus einer Startzahl, dem **Seed**, eine Zahlenfolge, die zufällig aussieht. **Gleicher Seed ergibt dieselbe Folge.**
+
+Das sorgt für **Reproduzierbarkeit**:
+- **Fehlersuche:** Ein auffälliger Lauf lässt sich beliebig oft identisch wiederholen.
+- **Vergleich:** Nach einer Codeänderung liegen Unterschiede am Code, nicht an anderen Startpositionen.
+- **Tests:** Ein Test liefert immer dasselbe Ergebnis.
+
+### 6.2 Zufall in C++ (`<random>`)
+
+| Baustein | Aufgabe | im Projekt |
+|---|---|---|
+| Generator | erzeugt aus dem Seed rohe Zufallszahlen | `std::mt19937` (Mersenne Twister) |
+| Seed | Startzahl | z. B. `42` |
+| Verteilung | formt die Zahlen in den gewünschten Bereich | `std::uniform_real_distribution<float>(-radius, radius)` |
+
+Jeder Aufruf `verteilung(generator)` liefert eine neue Zahl. Die alte C-Funktion `rand()` gilt als veraltet.
+
+**Einschränkung:** `std::mt19937` ist im Standard exakt festgelegt. Wie `uniform_real_distribution` die Rohzahlen umrechnet, darf jede Standardbibliothek selbst bestimmen. Unter Linux (libstdc++) und macOS (libc++) können deshalb trotz gleichem Seed andere Zahlen entstehen. Reproduzierbar ist es also auf **demselben System**.
+
+### 6.3 Reihenfolge der Auswertung von Argumenten
+
+In C++ ist **nicht festgelegt**, in welcher Reihenfolge die Argumente eines Funktionsaufrufs ausgewertet werden. Bei
+
+```
+Vec3(verteilung(generator), verteilung(generator), verteilung(generator))
+```
+
+kann ein Compiler von links nach rechts, ein anderer von rechts nach links auswerten. Dann wären x und z vertauscht. Deshalb wird jede Zahl in einer **eigenen Anweisung** erzeugt, denn zwischen Anweisungen gilt immer die Reihenfolge von oben nach unten.
+
+### 6.4 Freie Funktionen im Header: `inline`
+
+Eine **freie Funktion** (nicht in einer Klasse), die in einem Header definiert wird, entsteht in jeder `.cpp`-Datei, die den Header einbindet. Der Linker findet dann mehrere gleichnamige Funktionen und bricht ab. **`inline`** erlaubt diese Mehrfachdefinition ausdrücklich. Methoden, die innerhalb einer Klasse definiert werden, sind automatisch `inline`.
+
+### 6.5 Groß- und Kleinschreibung von Dateinamen
+
+macOS ignoriert Groß- und Kleinschreibung in Dateinamen meist, Linux nicht. `#include "core/Teilchenspeicher.hpp"` findet unter Linux die Datei `teilchenspeicher.hpp` nicht. Konvention im Projekt: **Klassennamen groß** (`Teilchenspeicher`), **Dateinamen klein** (`teilchenspeicher.hpp`).

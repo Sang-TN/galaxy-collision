@@ -65,3 +65,12 @@
 - **Ausgabe:** Erklärung von `target_include_directories`, Cache und Cache-Lokalität, AoS/SoA, `std::vector`, Invarianten, Kopie/Referenz/`std::span`, `push_back`, `size()`, `std::size_t`, temporären Objekten und Most Vexing Parse; Pseudocode für `hinzufuegen`; Hinweise auf Fehler statt fertiger Lösung; Texte für `theorie.md` (5.1–5.5), `entscheidungen.md` (E7–E10), `tests.md` (T1, T2), `uml.md` und README
 - **Zweck:** Datenstruktur für viele Sterne entwerfen und begründen, Code-Review, Dokumentation vorbereiten
 - **Eigene Bearbeitung:** CMake-Zeile, Tests in `viewer.cpp` und `teilchenspeicher.hpp` selbst geschrieben; Entscheidung für SoA, `private` und deutsche Bezeichner selbst getroffen; Fehler nach Hinweisen selbst korrigiert; Texte von der KI übernommen, werden in eigenen Worten umgeschrieben
+
+## 30.10.2026 (3) - span-Getter und zufällige Punktwolke
+
+- **KI-System:** Claude (claude.ai), Anthropic, Claude Opus 5.5
+- **Datum:** 30.10.2026
+- **Prompt:** Fragen zur roten Markierung von `std::span` im Editor („qualified name is not allowed“), zum Seed („dann kann man zurücktracen?“), zur `for`-Schleife und zu `verteilung(generator)` („was muss statt zufall rein?“), Bitte um Review von `teilchenspeicher.hpp`, `zufall.hpp` und `viewer.cpp`
+- **Ausgabe:** Erklärung von Überladung mit `const`, IntelliSense-Einstellung, Pseudozufall und Seed, `<random>` (Generator, Verteilung), `inline` bei freien Funktionen, unbestimmter Auswertungsreihenfolge von Argumenten, Groß-/Kleinschreibung unter Linux; Rezept und Pseudocode für `zufaelligePunkte`; Hinweise auf Fehler; Texte für `theorie.md` (5.6, 6.1–6.5), E11, T3, `uml.md`
+- **Zweck:** Zugriff auf den Teilchenspeicher und Startpositionen umsetzen, Code-Review, Dokumentation
+- **Eigene Bearbeitung:** Getter, `zufall.hpp` und Test selbst geschrieben; Fehler nach Hinweisen selbst korrigiert; Test zweimal ausgeführt und Ergebnis selbst geprüft; Texte von der KI übernommen, werden in eigenen Worten umgeschrieben

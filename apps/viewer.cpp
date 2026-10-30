@@ -1,14 +1,18 @@
 #include "raylib.h"
 #include "core/vec3.hpp"
 #include "core/teilchenspeicher.hpp"
+#include "setup/zufall.hpp"
 #include <iostream>
 
 int main()
 {
-    Vec3 v(3, 4, 12);
-    Vec3 v1(7, 10, 15);
+
     Teilchenspeicher speicher;
-    speicher.hinzufuegen(v, v1);
+    zufaelligePunkte(speicher, 500, 1.0f, 42);
+    speicher.positionen()[0].x;
+
+    std::cout << speicher.positionen()[0].x << " " << speicher.positionen()[0].y << " " << speicher.positionen()[0].z << std::endl;
+
     std::cout << speicher.anzahl() << std::endl;
 
     InitWindow(1280, 720, "Galaxienkollision");

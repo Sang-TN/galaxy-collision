@@ -14,9 +14,11 @@ classDiagram
     class Vec3
     class Teilchenspeicher
     Teilchenspeicher "1" *-- "0..*" Vec3 : besteht aus
+    class zufall_hpp["«Funktion» zufaelligePunkte"]
+    zufall_hpp ..> Teilchenspeicher : füllt
 ```
 
-Der Teilchenspeicher **besteht aus** vielen `Vec3` (Komposition): Die Vektoren gehören zum Speicher und existieren nicht ohne ihn.
+Der Teilchenspeicher **besteht aus** vielen `Vec3` (Komposition): Die Vektoren gehören zum Speicher und existieren nicht ohne ihn. Die freie Funktion `zufaelligePunkte` (`src/setup/zufall.hpp`) **benutzt** den Teilchenspeicher und füllt ihn.
 
 ---
 
@@ -40,7 +42,7 @@ classDiagram
 
 ---
 
-## Teilchenspeicher (`src/core/teilchenspeicher.hpp`) – teilweise umgesetzt
+## Teilchenspeicher (`src/core/teilchenspeicher.hpp`) – umgesetzt (M1)
 
 ```mermaid
 classDiagram
@@ -52,12 +54,10 @@ classDiagram
         +anzahl() std::size_t*
         +positionen() std::span~Vec3~
         +positionen() std::span~const Vec3~*
-        +geschwindigkeiten() std::span~Vec3~
-        +beschleunigungen() std::span~Vec3~
     }
 ```
 
-*Umgesetzt:* Attribute, `hinzufuegen`, `anzahl`. *Noch offen:* die `span`-Getter.
+*Umgesetzt:* Attribute, `hinzufuegen`, `anzahl`, `positionen()` in beiden Varianten. *Folgt in M2:* Getter für Geschwindigkeiten und Beschleunigungen.
 
 *Festgelegt:* deutsche Bezeichner; Vektoren `private`, damit die Invariante „alle drei gleich lang“ geschützt ist (siehe E9).
 
