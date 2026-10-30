@@ -252,3 +252,55 @@ Die Quadratwurzel stellt die Standardbibliothek `<cmath>` als **`std::sqrt`** be
 Quadrate werden als `x * x` statt mit einer Potenzfunktion berechnet, weil eine einfache Multiplikation schneller ist.
  
 `length()` gibt einen `float` zurück, keinen `Vec3`, denn der Betrag ist ein Skalar (siehe 2.2 und 3.5).
+
+## 5 Speicherung vieler Teilchen
+ 
+### 5.1 Array of Structs (AoS) und Struct of Arrays (SoA)
+ 
+**Array of Structs (AoS):** Jeder Stern ist ein Objekt, alle Objekte stehen in einer Liste. Die Daten eines Sterns liegen im Speicher nebeneinander.
+ 
+```
+sterne = [ Stern{pos, vel}, Stern{pos, vel}, Stern{pos, vel}, ... ]
+```
+ 
+**Struct of Arrays (SoA):** Je Eigenschaft gibt es ein eigenes Array. Ein Stern ist nur noch ein **Index**.
+ 
+```
+positionen      = [ pos0, pos1, pos2, ... ]
+geschwindigkeit = [ vel0, vel1, vel2, ... ]
+```
+ 
+Stern Nummer 5 ist `positionen[5]` und `geschwindigkeit[5]`.
+ 
+| | AoS | SoA |
+|---|---|---|
+| Verständlichkeit | intuitiv, objektorientiert | weniger intuitiv |
+| Kapselung | pro Stern | nur über eine übergeordnete Klasse |
+| Fehlerrisiko | gering | Arrays müssen gleich lang und gleich sortiert bleiben |
+| Cache-Lokalität | schlechter | besser |
+ 
+### 5.2 Der Cache
+ 
+Der Prozessor holt Daten nicht einzeln aus dem Arbeitsspeicher, weil das zu langsam wäre. Er lädt immer einen ganzen Block nebeneinanderliegender Daten (eine **Cache-Line**, meist 64 Byte) in seinen schnellen Zwischenspeicher, den **Cache**. Das lohnt sich nur, wenn in diesem Block auch das steckt, was als Nächstes gebraucht wird.
+ 
+Beispiel: Die Schleife „für alle Sterne: Position = Position + Geschwindigkeit · dt“ braucht keine Farbe, Masse oder Herkunft.
+- Bei **AoS** liegen diese Daten zwischen den Positionen. Ein geladener Block enthält viel Unnötiges.
+- Bei **SoA** liegen alle Positionen direkt hintereinander. Ein geladener Block enthält nur benötigte Daten.
+Diese Eigenschaft heißt **Cache-Lokalität** (*cache locality*). Die Entscheidung für das Projekt ist in `entscheidungen.md`, E8 begründet.
+
+### 5.3 Zugriff auf private Daten: Kopie, Referenz und `std::span`
+ 
+Sind die Vektoren `private`, brauchen andere Programmteile einen kontrollierten Zugriff. Die Darstellung muss die Positionen **lesen**, die Physik muss sie **ändern**. Entscheidend ist, was ein Getter zurückgibt:
+ 
+| Rückgabe | Lesen | Elemente ändern | Größe ändern | Problem |
+|---|---|---|---|---|
+| `std::vector<Vec3>` (Kopie) | ✔ | nur in der Kopie | nur in der Kopie | Alle Elemente werden kopiert, Änderungen erreichen das Original nicht |
+| `const std::vector<Vec3>&` | ✔ | ✘ | ✘ | Die Physik kann nichts ändern |
+| `std::vector<Vec3>&` | ✔ | ✔ | ✔ | `push_back` von außen möglich, die Invariante ist umgangen |
+| `std::span<Vec3>` | ✔ | ✔ | ✘ | – |
+ 
+**`std::span`** (C++20, `<span>`) ist ein **Sichtfenster** auf zusammenhängend gespeicherte Daten:
+- Elemente können gelesen und geändert werden, z. B. `pos[5] = …`.
+- Elemente können nicht hinzugefügt oder entfernt werden, `span` hat kein `push_back`.
+- Es wird nichts kopiert. Eine Änderung über den `span` ändert direkt das Original im `std::vector`, ähnlich wie eine Referenz, nur für einen ganzen Bereich.
+`std::span` funktioniert, weil `std::vector` seine Elemente zusammenhängend speichert.

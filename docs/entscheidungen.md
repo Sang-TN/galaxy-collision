@@ -118,3 +118,54 @@ Benötigte Operationen (Herleitung in `theorie.md`, Abschnitte 3 und 4):
 - Der Modulpfad im `#include` zeigt sofort, zu welchem Teil der Architektur ein Header gehört (z. B. `core/` oder `physics/`).
 - Ein einziger Eintrag reicht für alle späteren Module. Gleichnamige Dateien in verschiedenen Modulen geraten nicht in Konflikt.
 **Unterschied `include` und `link`:** `target_include_directories` sagt dem **Compiler**, wo er Header findet. `target_link_libraries` sagt dem **Linker**, welche fertigen Bibliotheken eingebunden werden.
+
+---
+ 
+## E8 – Teilchenspeicher als Struct of Arrays (SoA) (M1)
+ 
+**Entscheidung:** Die Sterne werden als **Struct of Arrays** gespeichert: ein Array mit allen Positionen, eines mit allen Geschwindigkeiten. Ein Stern ist ein Index in diesen Arrays. Eine eigene Klasse besitzt die Arrays und hält sie synchron.
+ 
+**Alternative:**
+- **Array of Structs (AoS):** eine Klasse `Stern` mit Position und Geschwindigkeit, alle Sterne in einer Liste
+**Begründung (eigene Worte):** SoA lässt mehr Spielraum, falls das Projekt später größer wird als geplant (mehr Sterne, Barnes-Hut, Parallelisierung).
+ 
+**Fachliche Gründe:**
+- **Cache-Lokalität:** Der Prozessor lädt Daten in Blöcken (Cache-Lines, meist 64 Byte). Bei SoA liegen z. B. alle Positionen direkt hintereinander, ein geladener Block enthält nur benötigte Daten. Bei AoS lädt er auch Daten mit, die die aktuelle Schleife nicht braucht.
+- **Zeichnen:** raylib zeichnet viele Punkte am effizientesten, wenn alle Positionen zusammenhängend im Speicher liegen.
+- **Barnes-Hut (M5):** Der Aufbau des Octrees benötigt nur die Positionen.
+**Nachteile und Gegenmaßnahme:**
+- Weniger intuitiv, ein Stern ist kein eigenes Objekt mehr, die Zusammengehörigkeit ergibt sich nur über den Index.
+- Die Arrays müssen immer gleich lang und gleich sortiert sein.
+- Gegenmaßnahme: Die Kapselung liegt eine Ebene höher. Eine Klasse für den ganzen Teilchenspeicher besitzt die Arrays und ist als einzige dafür zuständig, dass sie synchron bleiben.
+*Hinweis:* Bei nur Position und Geschwindigkeit (24 Byte pro Stern) ist der Geschwindigkeitsvorteil in Stufe 1 voraussichtlich klein. Eine Messung AoS gegen SoA wäre eine mögliche Ergänzung für `tests.md`.
+
+---
+
+## E9 – Teilchenspeicher: `private` Vektoren (M1)
+ 
+**Entscheidung:** Die Vektoren `positionen`, `geschwindigkeiten` und `beschleunigungen` sind `private`. Neue Sterne kommen nur über `hinzufuegen` hinein. Die Bezeichner sind deutsch.
+ 
+**Alternativen:**
+- `public` Vektoren wie bei `Vec3`
+- Englische Bezeichner
+**Begründung:**
+- Anders als bei `Vec3` gibt es hier eine **Invariante**: Alle drei Vektoren müssen immer gleich lang und gleich sortiert sein. Wären sie `public`, könnte jemand von außen z. B. nur `positionen.push_back(...)` aufrufen. Dann gehörten Position und Geschwindigkeit eines Index nicht mehr zum selben Stern, ohne Fehlermeldung.
+- Mit `private` gibt es genau eine Stelle (`hinzufuegen`), die alle drei Vektoren gemeinsam verändert.
+
+---
+ 
+## E10 – Zugriff auf den Teilchenspeicher über `std::span` (M1)
+ 
+**Entscheidung:** Der Teilchenspeicher gibt seine Vektoren nicht direkt heraus. Lesender Zugriff erfolgt über `const`-Referenzen bzw. einen `span` auf `const Vec3`. Ändernder Zugriff (Physik) erfolgt über `std::span<Vec3>`.
+ 
+**Alternativen:**
+- Getter mit Kopie (`std::vector<Vec3>`)
+- Getter mit veränderbarer Referenz (`std::vector<Vec3>&`)
+- Zugriff pro Element über einen Index, z. B. `position(i)`
+**Begründung:**
+- Eine Kopie wäre bei zehntausenden Sternen teuer und Änderungen kämen nicht im Original an.
+- Eine veränderbare Referenz erlaubt `push_back` von außen und umgeht damit die Invariante aus E9.
+- `std::span` erlaubt genau das Benötigte: Werte ändern, aber nicht die Größe. Es kopiert nichts.
+- Bezug zu E8 (SoA): Der `span` liefert alle Positionen als zusammenhängenden Bereich, gut für Cache und Zeichnen.
+- `std::span` ist Teil von C++20, das im Projekt ohnehin verwendet wird.
+
