@@ -1,6 +1,6 @@
 #include "raylib.h"
 #include "core/vec3.hpp"
-#include "core/Teilchenspeicher.hpp"
+#include "core/teilchenspeicher.hpp"
 #include <iostream>
 
 int main()

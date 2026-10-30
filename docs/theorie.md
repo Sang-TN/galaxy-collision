@@ -221,6 +221,7 @@ Bei `a + b` gilt damit:
 Abgrenzung zu ähnlichen Schlüsselwörtern:
 - **`final`** verbietet, dass eine Unterklasse die Methode überschreibt (Vererbung).
 - **`static`** macht eine Methode unabhängig von einem Objekt, sie hat dann kein `this`.
+
 ### 4.9 Endlose Rekursion
  
 **Rekursion** bedeutet, dass eine Funktion sich selbst aufruft. Ohne Abbruchbedingung ruft sie sich endlos auf, bis der Speicher für Funktionsaufrufe (der **Stack**) voll ist und das Programm mit einem **Stack Overflow** abstürzt.
