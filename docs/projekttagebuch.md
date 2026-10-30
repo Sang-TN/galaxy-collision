@@ -6,4 +6,5 @@
 | 17.10.2026 | M0 | CMake installiert, `CMakeLists.txt` und `viewer.cpp` erstellt | 1 h | Syntax von CMake-Befehlen (Argumente durch Leerzeichen getrennt, keine absoluten Pfade) |
 | 17.10.2026 | M0 | raylib per `FetchContent` eingebunden, Game Loop mit leerem Fenster | 3 h | Deklaration und Aufruf verwechselt, Groß-/Kleinschreibung (PascalCase) beachtet; erster Build dauert wegen des Downloads länger |
 | 29.10.2026 | M0 / M1 | Entwicklungsumgebung in GitHub Codespaces eingerichtet; Vektoroperationen und ihre Rolle in der Gravitationsformel erarbeitet (`theorie.md` 3.1–3.7) | 1 h | Konfigurieren brach wegen fehlender RandR-/X11-Header ab, per `apt` nachinstalliert. Betrag zuerst als 3 + 4 berechnet, Satz des Pythagoras dann korrekt angewendet (auch in 3D). |
-| | | **Summe** | **7 h** | |
+| 30.10.2026 | M1 | Klasse `Vec3` in `src/core/vec3.hpp` geschrieben: Attribute, Konstruktoren, Operatoren `+ - * /`, `length()`; Entscheidungen E4–E6 dokumentiert | 1 h | `float x, y, z = 0` initialisierte nur z, korrigiert. Endlose Rekursion in `operator+` (Vec3 + Vec3 statt float + float), korrigiert. Beim Skalar fälschlich Komponenten angehängt (`skalar x`), korrigiert. `std::sqrt` erst ohne `#include <cmath>` und mit Komma statt `+`. |
+| | | **Summe** | **8 h** | |

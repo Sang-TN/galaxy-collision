@@ -73,3 +73,33 @@ Benötigte Operationen (Herleitung in `theorie.md`, Abschnitte 3 und 4):
 - Für Stufe 1 (masselose Teststerne) reicht die Genauigkeit voraussichtlich aus
 
 *Zu überprüfen in M4:* Ob sich die Rundungsfehler über viele Zeitschritte in der Energiedrift bemerkbar machen. Gegebenenfalls Vergleichsmessung `float` gegen `double`.
+
+---
+
+## E5 – `class` mit öffentlichen Attributen (M1)
+ 
+**Entscheidung:** `Vec3` wird als `class` geschrieben. Die Attribute x, y und z sind `public`, ohne Getter und Setter.
+ 
+**Alternativen:**
+- `private` Attribute mit Gettern und Settern
+- `struct` statt `class` (in C++ identisch, nur standardmäßig `public`; übliche Konvention für reine Datentypen)
+**Begründung:**
+- Kapselung mit `private` schützt eine **Invariante**, also eine Regel, die immer gelten muss (z. B. Kontostand nie negativ). Bei `Vec3` ist jede Kombination von x, y und z gültig. Es gibt nichts zu schützen, Getter und Setter wären nur zusätzlicher Code ohne Nutzen.
+- Direkter Zugriff wie `v.x` hält die Formeln im Code kurz und lesbar.
+- `class` statt `struct`: Aus dem Unterricht vertraut. Technisch sind beide gleichwertig, da die Sichtbarkeit ausdrücklich mit `public:` festgelegt wird.
+**Zusätzlich:** Die Attribute haben den Startwert 0, damit `Vec3 v;` den Nullvektor (0, 0, 0) ergibt statt zufälliger Werte aus dem Speicher.
+
+---
+ 
+## E6 – Keine Prüfung auf Division durch 0 in `operator/` (M1)
+ 
+**Entscheidung:** `operator/` prüft nicht, ob der Skalar 0 ist.
+ 
+**Alternativen:**
+- Prüfung in der Methode mit Fehlermeldung oder Ausnahme (Exception)
+- Prüfung in der Methode mit Ersatzwert (z. B. Nullvektor zurückgeben)
+**Begründung:**
+- Bei `float` stürzt eine Division durch 0 nicht ab. Nach dem Standard **IEEE 754** ergibt 1,0 / 0,0 den Wert **inf** (unendlich) und 0,0 / 0,0 den Wert **NaN** (*Not a Number*). Gefährlich ist NaN, weil jede weitere Rechnung damit wieder NaN ergibt.
+- Eine Prüfung würde jede der millionenfachen Divisionen pro Sekunde verlangsamen.
+- Der kritische Fall wird bereits durch die Gravitationsformel verhindert: Durch das **Softening** ε ist der Nenner (|r|² + ε²)^(3/2) auch bei |r| = 0 nie 0.
+- Verantwortlich für gültige Eingaben ist der Aufrufer, nicht der Vektor.

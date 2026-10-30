@@ -193,3 +193,62 @@ Beispiel, warum das wichtig ist: In `position + geschwindigkeit * dt` würde ein
 **Inlining:** Sieht der Compiler den Rumpf einer kleinen Funktion, kann er ihn direkt an die Aufrufstelle kopieren. Dadurch entfällt der Funktionsaufruf (Sprung hin und zurück). Das ist nur möglich, wenn der Rumpf in derselben Übersetzungseinheit sichtbar ist, also im Header steht.
  
 Für `Vec3`, dessen Operatoren millionenfach pro Sekunde aufgerufen werden, wird deshalb die **header-only**-Variante gewählt: Deklaration und Implementierung stehen gemeinsam in `src/core/vec3.hpp` (Begründung in `docs/entscheidungen.md`).
+
+### 4.7 Startwerte der Attribute (Nullvektor)
+ 
+Eine `float`-Variable ohne Startwert wird in C++ nicht automatisch auf 0 gesetzt. Sie enthält, was zufällig vorher an dieser Stelle im Speicher stand. Deshalb bekommen x, y und z den Startwert 0. `Vec3 v;` ergibt so den **Nullvektor** (0, 0, 0).
+ 
+- **Nullvektor:** Addiert man ihn zu einem Vektor, ändert sich nichts: v + (0, 0, 0) = v
+- **Ursprung:** Als Ort gedeutet ist (0, 0, 0) der Mittelpunkt des Koordinatensystems.
+**Typischer Fehler:** In `float x, y, z = 0;` gehört `= 0` nur zu `z`. x und y bleiben uninitialisiert. Richtig ist `float x = 0, y = 0, z = 0;`. Der Compiler meldet diesen Fehler nicht.
+ 
+### 4.8 Referenzen und `const`
+ 
+**Wertübergabe** (`Vec3 other`): Die Funktion bekommt eine **Kopie** des Arguments.
+ 
+**Referenzübergabe** (`Vec3& other`): Die Funktion arbeitet direkt mit dem **Original**, es wird nichts kopiert. Die Referenz ist nur ein zweiter Name für dasselbe Objekt.
+ 
+**`const` beim Parameter** (`const Vec3& other`): Das Original darf in der Funktion nicht verändert werden. Zusammen bedeutet das: nicht kopieren, aber auch nicht verändern. Das ist die übliche Konvention für Klassen-Parameter. Bei `Vec3` mit nur 12 Byte wäre eine Kopie ebenfalls billig.
+ 
+**Einfache Zahlen** (`float skalar`) werden als Wert übergeben, weil eine 4-Byte-Kopie billiger ist als eine Referenz.
+ 
+**`const` hinter der Parameterliste** (`... ) const`): macht die Methode zu einer **konstanten Methode**. Sie darf `this`, also das eigene Objekt, nicht verändern.
+ 
+Bei `a + b` gilt damit:
+- `b` (= `other`) ist durch `const Vec3&` geschützt,
+- `a` (= `this`) ist durch das `const` hinter der `)` geschützt,
+- das Ergebnis ist ein **neues** `Vec3`.
+Abgrenzung zu ähnlichen Schlüsselwörtern:
+- **`final`** verbietet, dass eine Unterklasse die Methode überschreibt (Vererbung).
+- **`static`** macht eine Methode unabhängig von einem Objekt, sie hat dann kein `this`.
+### 4.9 Endlose Rekursion
+ 
+**Rekursion** bedeutet, dass eine Funktion sich selbst aufruft. Ohne Abbruchbedingung ruft sie sich endlos auf, bis der Speicher für Funktionsaufrufe (der **Stack**) voll ist und das Programm mit einem **Stack Overflow** abstürzt.
+ 
+**Typischer Fehler in `operator+`:**
+ 
+```
+return Vec3(x, y, z) + Vec3(other.x, other.y, other.z);
+```
+ 
+Das `+` steht zwischen zwei `Vec3` und ruft damit wieder `operator+` auf, also sich selbst. Richtig ist, die **einzelnen Zahlen** zu addieren (`float + float`), denn dafür kennt C++ das `+` bereits:
+ 
+```
+return Vec3(x + other.x, y + other.y, z + other.z);
+```
+ 
+### 4.10 Gleitkommazahlen: Division durch 0 (IEEE 754)
+ 
+Bei `int` führt eine Division durch 0 zum Absturz. Bei `float` legt der Standard **IEEE 754** fest:
+ 
+- 1,0 / 0,0 = **inf** (unendlich)
+- 0,0 / 0,0 = **NaN** (*Not a Number*)
+Das Programm läuft weiter. Gefährlich ist NaN, weil jede weitere Rechnung damit wieder NaN ergibt. Ein einzelner fehlerhafter Stern verschwindet dann ohne Fehlermeldung. In der Gravitationsformel verhindert das **Softening** ε diesen Fall (siehe `entscheidungen.md`, E6).
+ 
+### 4.11 Die Wurzel in C++
+ 
+Die Quadratwurzel stellt die Standardbibliothek `<cmath>` als **`std::sqrt`** bereit (*square root*). `std::` ist der **Namensraum** (*namespace*) der C++-Standardbibliothek. Fehlt `#include <cmath>`, meldet der Editor, dass `std` kein Element `sqrt` hat.
+ 
+Quadrate werden als `x * x` statt mit einer Potenzfunktion berechnet, weil eine einfache Multiplikation schneller ist.
+ 
+`length()` gibt einen `float` zurück, keinen `Vec3`, denn der Betrag ist ein Skalar (siehe 2.2 und 3.5).

@@ -47,3 +47,12 @@
 - **Ausgabe:** Hinweise zu fehlenden Linux-Paketen (RandR/X11-Header) und zur fehlenden Grafikausgabe in Codespaces; Kolloquiumsfragen zu M0 mit Bewertung; schrittweise Erklärung von Vektoren, Skalaren und Vektoroperationen (Addition, Subtraktion, Skalarmultiplikation, Division, Betrag über den Satz des Pythagoras) mit Übungsfragen; Zuordnung der Operationen zur Gravitationsformel; gegliederte Fassung von `theorie.md`
 - **Zweck:** Entwicklungsumgebung einrichten, mathematische Grundlagen für die Klasse `Vec3` verstehen, Theoriekapitel vorbereiten
 - **Eigene Bearbeitung:** Build-Fehler selbst im Terminal behoben; Kolloquiumsfragen 1–3 selbst beantwortet; Rechenaufgaben (Abstandsvektor, Betrag in 2D und 3D) selbst gelöst, nach Hinweisen Fehler selbst korrigiert; Notizen selbst erstellt, Gliederung von der KI übernommen, Text wird für die Dokumentation in eigenen Worten umgeschrieben
+
+## 30.10.2026 - Klasse Vec3: Operatorüberladung und Code-Review
+ 
+- **KI-System:** Claude (claude.ai), Anthropic, Claude Opus 5.5
+- **Datum:** 30.10.2026
+- **Prompt:** Fragen zu Startwerten, `public`/`private`, Referenzen und `const` („wahrscheinlich eine Referenz zum anderen Vec3?“, „final? static?“), Bitte um Hilfe beim Rumpf von `operator+` („beim Rumpf musst du mir bisschen helfen“), Bitte um Review des eigenen Codes von `vec3.hpp`, Bitte um Festhalten von Theorie und Entscheidungen
+- **Ausgabe:** Erklärung von Nullvektor und uninitialisierten Variablen, Kapselung und Invarianten, Operatorüberladung, Wert- und Referenzübergabe, `const`-Parametern und konstanten Methoden, Inlining, IEEE 754 (inf/NaN), `std::sqrt`; schrittweise Hinweise statt fertiger Lösung; Hinweise auf Fehler (Initialisierung, endlose Rekursion, Komponenten beim Skalar, fehlendes `#include`, fehlendes `return`/`const`); Fassung der Abschnitte 4.7–4.11 in `theorie.md` und der Entscheidungen E4–E6
+- **Zweck:** C++-Konzepte für die Klasse `Vec3` verstehen, Code-Review, Dokumentation vorbereiten
+- **Eigene Bearbeitung:** `vec3.hpp` vollständig selbst geschrieben; Entscheidungen (`float`, `class` mit `public`) selbst getroffen; Fehler nach Hinweisen selbst gefunden und korrigiert; Texte von der KI übernommen, werden für die Dokumentation in eigenen Worten umgeschrieben
