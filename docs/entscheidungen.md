@@ -103,3 +103,18 @@ Benötigte Operationen (Herleitung in `theorie.md`, Abschnitte 3 und 4):
 - Eine Prüfung würde jede der millionenfachen Divisionen pro Sekunde verlangsamen.
 - Der kritische Fall wird bereits durch die Gravitationsformel verhindert: Durch das **Softening** ε ist der Nenner (|r|² + ε²)^(3/2) auch bei |r| = 0 nie 0.
 - Verantwortlich für gültige Eingaben ist der Aufrufer, nicht der Vektor.
+
+---
+ 
+## E7 – `src` als Include-Verzeichnis (M1)
+ 
+**Entscheidung:** In `CMakeLists.txt` wird `${CMAKE_SOURCE_DIR}/src` per `target_include_directories` als Include-Verzeichnis eingetragen. Header werden mit Modulpfad eingebunden, z. B. `#include "core/vec3.hpp"`.
+ 
+**Alternativen:**
+- Relativer Pfad in jeder Quelldatei, z. B. `#include "../src/core/vec3.hpp"`
+- Jedes Modul einzeln als Include-Verzeichnis (`src/core`, `src/physics`, …), Einbinden dann nur mit Dateinamen
+**Begründung:**
+- Zentral an einer Stelle festgelegt: Werden Dateien verschoben, müssen nicht alle `#include`-Zeilen angepasst werden.
+- Der Modulpfad im `#include` zeigt sofort, zu welchem Teil der Architektur ein Header gehört (z. B. `core/` oder `physics/`).
+- Ein einziger Eintrag reicht für alle späteren Module. Gleichnamige Dateien in verschiedenen Modulen geraten nicht in Konflikt.
+**Unterschied `include` und `link`:** `target_include_directories` sagt dem **Compiler**, wo er Header findet. `target_link_libraries` sagt dem **Linker**, welche fertigen Bibliotheken eingebunden werden.
