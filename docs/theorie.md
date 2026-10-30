@@ -304,3 +304,27 @@ Sind die Vektoren `private`, brauchen andere Programmteile einen kontrollierten 
 - Elemente können nicht hinzugefügt oder entfernt werden, `span` hat kein `push_back`.
 - Es wird nichts kopiert. Eine Änderung über den `span` ändert direkt das Original im `std::vector`, ähnlich wie eine Referenz, nur für einen ganzen Bereich.
 `std::span` funktioniert, weil `std::vector` seine Elemente zusammenhängend speichert.
+
+### 5.4 Objekte anlegen: benannt, temporär und eine Falle
+ 
+**Benanntes Objekt:** `Teilchenspeicher speicher;` legt ein Objekt mit Namen an. Es existiert bis zum Ende des umgebenden Blocks `{ }` und kann in mehreren Zeilen benutzt werden.
+ 
+**Temporäres Objekt:** `Teilchenspeicher()` erzeugt ein namenloses Objekt, das am Ende der Zeile wieder gelöscht wird. Typischer Fehler:
+ 
+```
+Teilchenspeicher().hinzufuegen(v, v1);            // Objekt 1: Stern hinein, danach gelöscht
+std::cout << Teilchenspeicher().anzahl();         // Objekt 2: neu und leer → Ausgabe 0
+```
+ 
+Richtig ist ein benanntes Objekt, das in beiden Zeilen verwendet wird.
+ 
+**Most Vexing Parse:** `Vec3 v2();` erzeugt **keinen** Nullvektor. C++ liest die Zeile als Deklaration einer Funktion `v2`, die ein `Vec3` zurückgibt. Ein Objekt mit Standardkonstruktor wird **ohne** Klammern angelegt: `Vec3 v2;`
+ 
+### 5.5 `std::vector`: Elemente anhängen und zählen
+ 
+- **`liste.push_back(element)`** hängt ein Element hinten an. Vor dem Punkt steht die Liste, **an die** angehängt wird, in den Klammern das Element, **das** angehängt wird.
+- **`liste.size()`** gibt die Anzahl der Elemente zurück, als `std::size_t`.
+- **`std::size_t`** (definiert in `<cstddef>`) ist ein **vorzeichenloser** ganzzahliger Typ (*unsigned*), der nie negativ wird. Er ist der übliche Typ für Größen und Anzahlen.
+**Regel für Includes:** Was eine Datei benutzt, bindet sie selbst ein, auch wenn es zufällig schon über einen anderen Header mitkommt.
+ 
+Im Teilchenspeicher hängt `hinzufuegen` an **alle drei** Listen genau ein Element an. Deshalb reicht in `anzahl()` die Abfrage **einer** Liste.

@@ -56,3 +56,12 @@
 - **Ausgabe:** Erklärung von Nullvektor und uninitialisierten Variablen, Kapselung und Invarianten, Operatorüberladung, Wert- und Referenzübergabe, `const`-Parametern und konstanten Methoden, Inlining, IEEE 754 (inf/NaN), `std::sqrt`; schrittweise Hinweise statt fertiger Lösung; Hinweise auf Fehler (Initialisierung, endlose Rekursion, Komponenten beim Skalar, fehlendes `#include`, fehlendes `return`/`const`); Fassung der Abschnitte 4.7–4.11 in `theorie.md` und der Entscheidungen E4–E6
 - **Zweck:** C++-Konzepte für die Klasse `Vec3` verstehen, Code-Review, Dokumentation vorbereiten
 - **Eigene Bearbeitung:** `vec3.hpp` vollständig selbst geschrieben; Entscheidungen (`float`, `class` mit `public`) selbst getroffen; Fehler nach Hinweisen selbst gefunden und korrigiert; Texte von der KI übernommen, werden für die Dokumentation in eigenen Worten umgeschrieben
+
+## 30.10.2026 (2) - Include-Verzeichnis, AoS/SoA und Teilchenspeicher
+
+- **KI-System:** Claude (claude.ai), Anthropic, Claude Opus 5.5
+- **Datum:** 30.10.2026
+- **Prompt:** Fragen zum Einbinden von `vec3.hpp` über CMake, zu AoS und SoA („bei AoS weil die daten ja in einer reihe sind“), zu `std::vector`, `private` und Zugriff von außen („mit getter aber keiner setter“), Bitte um Hilfe beim Teilchenspeicher („ab hier weiß ich nicht weiter“), Bitte um UML-Diagramme und Dokumentation
+- **Ausgabe:** Erklärung von `target_include_directories`, Cache und Cache-Lokalität, AoS/SoA, `std::vector`, Invarianten, Kopie/Referenz/`std::span`, `push_back`, `size()`, `std::size_t`, temporären Objekten und Most Vexing Parse; Pseudocode für `hinzufuegen`; Hinweise auf Fehler statt fertiger Lösung; Texte für `theorie.md` (5.1–5.5), `entscheidungen.md` (E7–E10), `tests.md` (T1, T2), `uml.md` und README
+- **Zweck:** Datenstruktur für viele Sterne entwerfen und begründen, Code-Review, Dokumentation vorbereiten
+- **Eigene Bearbeitung:** CMake-Zeile, Tests in `viewer.cpp` und `teilchenspeicher.hpp` selbst geschrieben; Entscheidung für SoA, `private` und deutsche Bezeichner selbst getroffen; Fehler nach Hinweisen selbst korrigiert; Texte von der KI übernommen, werden in eigenen Worten umgeschrieben

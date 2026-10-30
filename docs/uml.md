@@ -40,14 +40,14 @@ classDiagram
 
 ---
 
-## Teilchenspeicher (`src/core/…`) – Entwurf
+## Teilchenspeicher (`src/core/teilchenspeicher.hpp`) – teilweise umgesetzt
 
 ```mermaid
 classDiagram
     class Teilchenspeicher {
-        -std::vector~Vec3~ positionen
-        -std::vector~Vec3~ geschwindigkeiten
-        -std::vector~Vec3~ beschleunigungen
+        -std::vector~Vec3~ positionen_
+        -std::vector~Vec3~ geschwindigkeiten_
+        -std::vector~Vec3~ beschleunigungen_
         +hinzufuegen(const Vec3& position, const Vec3& geschwindigkeit) void
         +anzahl() std::size_t*
         +positionen() std::span~Vec3~
@@ -57,6 +57,8 @@ classDiagram
     }
 ```
 
+*Umgesetzt:* Attribute, `hinzufuegen`, `anzahl`. *Noch offen:* die `span`-Getter.
+
 *Festgelegt:* deutsche Bezeichner; Vektoren `private`, damit die Invariante „alle drei gleich lang“ geschützt ist (siehe E9).
 
-*Zugriff:* über `std::span` – Werte ändern ja, Größe ändern nein (siehe E10). Die Getter heißen wie die Attribute; ob es pro Vektor eine lesende `const`-Variante und eine ändernde Variante gibt, wird bei der Umsetzung festgelegt.
+*Zugriff:* über `std::span` – Werte ändern ja, Größe ändern nein (siehe E10). Private Attribute enden auf `_` (z. B. `positionen_`), weil Attribut und Methode in C++ nicht denselben Namen haben dürfen. Die Getter heißen ohne Unterstrich (`positionen()`); ob es pro Vektor eine lesende `const`-Variante und eine ändernde Variante gibt, wird bei der Umsetzung festgelegt.
