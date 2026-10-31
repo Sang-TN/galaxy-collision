@@ -196,3 +196,20 @@ Benötigte Operationen (Herleitung in `theorie.md`, Abschnitte 3 und 4):
 - Startbedingungen liegen laut Architektur in `src/setup/`.
 **Einschränkung:** Die Umrechnung durch `uniform_real_distribution` unterscheidet sich zwischen Standardbibliotheken. Reproduzierbar ist es auf demselben System (siehe `theorie.md` 6.2).
 
+---
+
+## E12 – Umwandlung `Vec3` → `Vector3` in `src/render/` (M1)
+
+**Entscheidung:** raylib zeichnet nur mit seinem eigenen Typ `Vector3`. Die Umwandlung übernimmt die freie Funktion `zuVector3(const Vec3 &)` in `src/render/umwandlung.hpp`. `src/core/vec3.hpp` bindet `raylib.h` nicht ein.
+
+**Alternativen:**
+- Umwandlung als Methode oder Funktion direkt in `vec3.hpp`
+- raylibs `Vector3` überall statt eines eigenen `Vec3` verwenden (verworfen in E2)
+- Umwandlung direkt in `viewer.cpp` ausschreiben
+**Begründung:**
+- **Abhängigkeitsrichtung:** `render/` darf `core/` kennen, aber nicht umgekehrt. Würde `vec3.hpp` `raylib.h` einbinden, hinge jede Datei, die `Vec3` benutzt, an der Grafikbibliothek. Das gilt auch für Physik, Tests und die Headless-Simulation `sim.cpp`, die nie etwas zeichnen.
+- **Geringe Kopplung:** Physik und Datenhaltung bleiben ohne raylib baubar und testbar, z. B. in Codespaces ohne Fenster. Ein Wechsel der Grafikbibliothek beträfe nur `render/`.
+- Eine eigene Funktion statt ausgeschriebener Umwandlung in `viewer.cpp` hält die Stelle an einem Ort und ist wiederverwendbar.
+- Parameter als `const Vec3 &`: nur lesen, keine Kopie. Rückgabe von `Vector3` per Aggregat-Initialisierung `{ }`, da `Vector3` ein C-`struct` ohne Konstruktor ist.
+- `inline`, weil die Funktion in einem Header definiert ist und sonst bei mehrfachem Einbinden gegen die One-Definition-Rule verstoßen würde.
+

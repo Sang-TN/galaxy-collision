@@ -83,3 +83,12 @@
 - **Ausgabe:** Plan für den Rest von M1 in drei Teilschritten; Erklärung von Kamera, Projektion, Sichtfeld und Up-Vektor; Vergleich der Zeichenschleife mit einem Daumenkino und des 3D-Modus mit einem Fotografen; Startwerte für `Camera3D` mit Begründung; Hinweise auf Fehler (Signatur statt Aufruf, Zeichnen außerhalb der Schleife, falscher Variablenname, Initialisierung mit runden Klammern) statt fertiger Lösung
 - **Zweck:** Grundlagen der 3D-Darstellung in raylib verstehen, Code-Review
 - **Eigene Bearbeitung:** Kamera und Zeichenschleife in `viewer.cpp` selbst geschrieben; Feldreihenfolge von `Camera3D` selbst in `raylib.h` nachgeschlagen; Fehler nach Hinweisen selbst korrigiert; Ergebnis durch Bauen und Starten selbst geprüft (Gitter sichtbar)
+
+## 31.10.2026 (2) - Umwandlung Vec3 → Vector3 und Punktwolke zeichnen
+
+- **KI-System:** Claude Code, Anthropic, Claude Opus 5.5
+- **Datum:** 31.10.2026
+- **Prompt:** Antwort auf die Frage nach der Abhängigkeit („vielleicht wegen performance gründen bei mehreren sternen?“, „auch die raylib.h“), Fragen zu PowerShell („warum geht touch umwandlung.hpp nicht“), zum Pseudocode und zu Headern („was meinst du mit den pfeil zu vector3 genau? … was ist an den headern falsch?“), zur Schleife („also eine for each schleife oder wie genau?“, „mit const und refernz oder nicht?“), Bitte um Formulierung der Doku-Einträge
+- **Ausgabe:** Erklärung von Kopplung und Abhängigkeitsrichtung (`render/` → `core/`), Headless-Betrieb; PowerShell-Befehl `New-Item`; Erklärung von Rückgabetyp, Include-Pfaden und Aggregat-Initialisierung von `Vector3`; Pseudocode für Umwandlung und Zeichenschleife; Erklärung der bereichsbasierten for-Schleife im Vergleich zu Python und von Kopie vs. `const`-Referenz; Hinweise auf Fehler statt fertiger Lösung; Texte für E12, Projekttagebuch und dieses Protokoll
+- **Zweck:** Punktwolke darstellen, Trennung von Physik und Darstellung verstehen und begründen, Code-Review, Dokumentation
+- **Eigene Bearbeitung:** `umwandlung.hpp` und Zeichenschleife in `viewer.cpp` selbst geschrieben; Fehler nach Hinweisen selbst korrigiert; Ergebnis durch Bauen und Starten selbst geprüft und per Screenshot festgehalten; Texte von der KI übernommen, werden in eigenen Worten umgeschrieben

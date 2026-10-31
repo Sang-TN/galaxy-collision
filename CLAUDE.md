@@ -241,7 +241,11 @@ Quellenangabe im Literaturverzeichnis: *Anbieter (Jahr), Name des KI-Systems, Mo
   - Provisorische Tests T1–T3 über `std::cout` in `viewer.cpp` (siehe `docs/tests.md`)
   - Doku: `theorie.md` Abschnitte 1–6, `entscheidungen.md` E1–E11, `uml.md`, `tests.md`
   - `viewer.cpp`: `Camera3D` (Position (3,2,3), Ziel Ursprung, perspektivisch, fovy 45) und `DrawGrid(10, 0.5f)` im 3D-Modus, Gitter wird angezeigt
-- **Nächster Schritt:** Die zufälligen Punkte im 3D-Modus zeichnen (Umwandlung `Vec3` → raylib `Vector3`, Ort dafür klären: `src/render/`). Danach Kamera drehbar machen und Bildrate festlegen, dann Kolloquiumsfragen zu M1, Definition of Done prüfen, Merge nach `main`.
+  - `src/render/umwandlung.hpp`: freie Funktion `zuVector3(const Vec3&)` → raylib `Vector3` (in `render/`, damit `core/` nicht von raylib abhängt)
+  - `viewer.cpp`: 500 Punkte per range-based for (`const Vec3 &`) als `DrawSphere(…, 0.01f, WHITE)` gezeichnet
+  - Screenshots der Fenster für die Doku (Vorschlag: `docs/bilder/`)
+  - Doku: `entscheidungen.md` E12 (Umwandlung in `render/`, Abhängigkeitsrichtung), Tagebuch und KI-Protokoll bis 31.10.2026 nachgetragen
+- **Nächster Schritt:** Kamera drehbar machen (Maus/Tastatur) und Bildrate festlegen. Dann Kolloquiumsfragen zu M1, Definition of Done prüfen, Merge nach `main`.
 - **Konventionen:** Klassennamen groß, Dateinamen klein; deutsche Bezeichner (außer `Vec3`, `length()`); private Attribute enden auf `_`.
 - **Offen fürs Kolloquium (M0, später nacharbeiten):** raylib-Vor-/Nachteile, fester Git-Tag, Out-of-Source-Build begründen, Game Loop erklären, Konfigurieren vs. Bauen.
 - **Offen mit dem Betreuer:** Abgabetermin, Umgang mit KI-Nutzung und Selbstständigkeitserklärung, ob für das KI-Protokoll Zitate und Zusammenfassungen statt vollständiger Prompts reichen.
