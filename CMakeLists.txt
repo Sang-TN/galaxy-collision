@@ -14,4 +14,6 @@ FetchContent_MakeAvailable(raylib)
 
 add_executable(viewer apps/viewer.cpp)
 
+target_include_directories(viewer PRIVATE ${CMAKE_SOURCE_DIR}/src/)
+
 target_link_libraries(viewer PRIVATE raylib)

@@ -1,0 +1,87 @@
+# UML-Klassendiagramme
+
+Die Diagramme sind in **Mermaid** geschrieben. GitHub stellt sie direkt als Grafik dar. Für die schriftliche Dokumentation können sie z. B. mit dem Mermaid Live Editor (mermaid.live) als Bild exportiert werden.
+
+**Legende:** `+` = public, `-` = private, `$` = static, `*` = Methode ist `const`
+
+---
+
+## Übersicht
+
+```mermaid
+classDiagram
+    direction LR
+    class Vec3
+    class Teilchenspeicher
+    Teilchenspeicher "1" *-- "0..*" Vec3 : besteht aus
+    class zufall_hpp["«Funktion» zufaelligePunkte"]
+    zufall_hpp ..> Teilchenspeicher : füllt
+    class umwandlung_hpp["«Funktion» zuVector3"]
+    class Vector3["«raylib» Vector3"]
+    umwandlung_hpp ..> Vec3 : liest
+    umwandlung_hpp ..> Vector3 : erzeugt
+```
+
+Der Teilchenspeicher **besteht aus** vielen `Vec3` (Komposition): Die Vektoren gehören zum Speicher und existieren nicht ohne ihn. Die freie Funktion `zufaelligePunkte` (`src/setup/zufall.hpp`) **benutzt** den Teilchenspeicher und füllt ihn.
+
+Die freie Funktion `zuVector3` (`src/render/umwandlung.hpp`) wandelt ein `Vec3` in raylibs `Vector3` um. Die Abhängigkeitspfeile zeigen nur von `render/` zu `core/` und zu raylib, **nie** von `core/` zu raylib (siehe E12).
+
+---
+
+## Module und Abhängigkeiten (M1)
+
+```mermaid
+flowchart LR
+    viewer["apps/viewer.cpp"] --> render["src/render/"]
+    viewer --> setup["src/setup/"]
+    viewer --> core["src/core/"]
+    viewer --> raylib[("raylib")]
+    render --> core
+    render --> raylib
+    setup --> core
+```
+
+Ein Pfeil bedeutet „bindet ein / hängt ab von“. `core/` hat keine ausgehenden Pfeile: Datenhaltung und später Physik lassen sich ohne raylib bauen und testen.
+
+---
+
+## Vec3 (`src/core/vec3.hpp`) – umgesetzt
+
+```mermaid
+classDiagram
+    class Vec3 {
+        +float x
+        +float y
+        +float z
+        +Vec3()
+        +Vec3(float x_, float y_, float z_)
+        +operator+(const Vec3& other) Vec3*
+        +operator-(const Vec3& other) Vec3*
+        +operator*(float skalar) Vec3*
+        +operator/(float skalar) Vec3*
+        +length() float*
+    }
+```
+
+---
+
+## Teilchenspeicher (`src/core/teilchenspeicher.hpp`) – umgesetzt (M1)
+
+```mermaid
+classDiagram
+    class Teilchenspeicher {
+        -std::vector~Vec3~ positionen_
+        -std::vector~Vec3~ geschwindigkeiten_
+        -std::vector~Vec3~ beschleunigungen_
+        +hinzufuegen(const Vec3& position, const Vec3& geschwindigkeit) void
+        +anzahl() std::size_t*
+        +positionen() std::span~Vec3~
+        +positionen() std::span~const Vec3~*
+    }
+```
+
+*Umgesetzt:* Attribute, `hinzufuegen`, `anzahl`, `positionen()` in beiden Varianten. *Folgt in M2:* Getter für Geschwindigkeiten und Beschleunigungen.
+
+*Festgelegt:* deutsche Bezeichner; Vektoren `private`, damit die Invariante „alle drei gleich lang“ geschützt ist (siehe E9).
+
+*Zugriff:* über `std::span` – Werte ändern ja, Größe ändern nein (siehe E10). Private Attribute enden auf `_` (z. B. `positionen_`), weil Attribut und Methode in C++ nicht denselben Namen haben dürfen. Die Getter heißen ohne Unterstrich (`positionen()`); ob es pro Vektor eine lesende `const`-Variante und eine ändernde Variante gibt, wird bei der Umsetzung festgelegt.

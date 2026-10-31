@@ -12,7 +12,7 @@ Eine 3D-N-Körper-Simulation in C++ mit raylib, in der zwei Scheibengalaxien kol
 - **C++:** Am vertrautesten bin ich mit Objektorientierung (Klassen, Objekte).
 - **Physik und Numerik:** Hier bin ich noch nicht sicher. Bitte nichts voraussetzen und von Grund auf erklären.
 - Außerdem: Python, SQL.
-- **Setup:** macOS, VS Code, Homebrew.
+- **Setup:** macOS, VS Code, Homebrew. Zusätzlich GitHub Codespaces (Linux) zum Schreiben, Bauen und Testen ohne Fenster; alles mit Fenster (raylib) auf dem Mac.
 
 ---
 
@@ -203,6 +203,7 @@ docs/
 ├── theorie.md          # Kapitel 3: Herleitungen und Grundlagen in meinen eigenen Worten
 ├── entscheidungen.md   # Kapitel 5: Jede Entscheidung mit Alternativen und fachlicher Begründung
 ├── tests.md            # Kapitel 5/7: Was getestet wurde, wie, Ergebnis, Messwerte
+├── uml.md              # Kapitel 5: UML-Klassendiagramme (Mermaid)
 ├── projekttagebuch.md  # Kapitel 4/6/7: Datum, Tätigkeit, Dauer, Probleme
 ├── ki-protokoll.md     # Kennzeichnung der KI-Nutzung (Pflicht)
 └── quellen.md          # Kapitel 8: Quellen im Schulformat
@@ -231,8 +232,26 @@ Quellenangabe im Literaturverzeichnis: *Anbieter (Jahr), Name des KI-Systems, Mo
 
 ## 11. Aktueller Stand
 
-- **M0 abgeschlossen (17.10.2026).** GitHub-Repo `Sang-TN/galaxy-collision` (Remote `origin`), erster Push erfolgt. Erledigt: lokales Git-Repo, `.gitignore`, `docs/`-Gerüst, README, erste Einträge in Projekttagebuch und KI-Protokoll. CMake installiert, minimales CMake-Projekt (C++20, Target `viewer` aus `apps/viewer.cpp`, gibt „Hallo Galaxie“ aus), Out-of-Source-Build in `build/`. raylib 5.5 per FetchContent (Git-Tag) eingebunden, `viewer` öffnet ein schwarzes 1280×720-Fenster (Game Loop).
-- **Nächster Schritt:** Zu Beginn der nächsten Sitzung die Kolloquiumsfragen zu M0 beantworten und bewerten, danach Branch `m1-punkte-im-raum` und Start von M1 (`Vec3`-Klasse).
-- **Offen mit dem Betreuer:** Abgabetermin, Umgang mit KI-Nutzung und Selbstständigkeitserklärung.
-- Noch keine Simulationslogik implementiert.
-- Parallel früh beginnen: `docs/theorie.md` und Zeitplanung (siehe 9.2).
+- **M0 abgeschlossen (17.10.2026).** GitHub-Repo `Sang-TN/galaxy-collision`, CMake-Projekt (C++20), raylib 5.5 per FetchContent, `viewer` öffnet ein schwarzes 1280×720-Fenster.
+- **M1 läuft (Branch `m1-punkte-im-raum`, noch nicht nach `main` gemergt).** Erledigt:
+  - `src/core/vec3.hpp`: Klasse `Vec3` (header-only, `float`, `public` Attribute mit Startwert 0, `operator+ - * /`, `length()`)
+  - `src/core/teilchenspeicher.hpp`: Klasse `Teilchenspeicher` als Struct of Arrays (`private` Listen `positionen_`, `geschwindigkeiten_`, `beschleunigungen_`; `hinzufuegen`, `anzahl`, `positionen()` als `std::span` mit und ohne `const`)
+  - `src/setup/zufall.hpp`: freie Funktion `zufaelligePunkte(speicher, anzahl, radius, seed)` mit `std::mt19937` und festem Seed
+  - CMake: `target_include_directories(viewer PRIVATE ${CMAKE_SOURCE_DIR}/src)`, Includes mit Modulpfad (`core/…`, `setup/…`)
+  - Provisorische Tests T1–T3 über `std::cout` in `viewer.cpp` (siehe `docs/tests.md`)
+  - Doku: `theorie.md` Abschnitte 1–6, `entscheidungen.md` E1–E11, `uml.md`, `tests.md`
+  - `viewer.cpp`: `Camera3D` (Position (3,2,3), Ziel Ursprung, perspektivisch, fovy 45) und `DrawGrid(10, 0.5f)` im 3D-Modus, Gitter wird angezeigt
+  - `src/render/umwandlung.hpp`: freie Funktion `zuVector3(const Vec3&)` → raylib `Vector3` (in `render/`, damit `core/` nicht von raylib abhängt)
+  - `viewer.cpp`: 500 Punkte per range-based for (`const Vec3 &`) als `DrawSphere(…, 0.01f, WHITE)` gezeichnet
+  - Screenshots der Fenster für die Doku (Vorschlag: `docs/bilder/`)
+  - Doku: `entscheidungen.md` E12 (Umwandlung in `render/`, Abhängigkeitsrichtung), Tagebuch und KI-Protokoll bis 31.10.2026 nachgetragen
+  - `viewer.cpp`: `SetTargetFPS(60)` und `DisableCursor()` einmal vor der Schleife, `UpdateCamera(&kamera, CAMERA_FREE)` vor `BeginDrawing` (EVA: erst aktualisieren, dann zeichnen). `CAMERA_ORBITAL` vorgemerkt fürs Backup-Video.
+  - Erkannt: Punktwolke ist ein Würfel (Koordinaten unabhängig gleichverteilt), Kugel bräuchte Verwerfungsmethode (Einschränkung in E11)
+  - Doku M1 vollständig: `theorie.md` 1–7 (neu: 6.6, 7.1–7.7), `entscheidungen.md` E1–E13, `tests.md` T1–T6 mit Abb. 1–2 (`docs/bilder/m1-gitter.png`, `m1-punktwolke.png`), `uml.md` mit `zuVector3` und Modulabhängigkeiten
+  - Kolloquiumsfragen M1 beantwortet (31.10.2026), Gesamt: gut. Definition of Done erfüllt.
+- **Nächster Schritt:** Branch `m1-punkte-im-raum` nach `main` mergen, dann M2 beginnen (Branch `m2-stabile-galaxie`): Einheiten festlegen, Herleitung der Kreisbahngeschwindigkeit.
+- **Offen fürs Kolloquium (M1, nacharbeiten):** Eigenes `Vec3` nicht mit „Performance“ begründen, sondern mit Unabhängigkeit von raylib (E2, E12). Fachbegriffe Cache-Zeile/räumliche Lokalität bei SoA, Gegenargument für AoS. Draw-Call und Batching als Begründung für die `DrawSphere`-Grenze.
+- **Konventionen:** Klassennamen groß, Dateinamen klein; deutsche Bezeichner (außer `Vec3`, `length()`); private Attribute enden auf `_`.
+- **Offen fürs Kolloquium (M0, später nacharbeiten):** raylib-Vor-/Nachteile, fester Git-Tag, Out-of-Source-Build begründen, Game Loop erklären, Konfigurieren vs. Bauen.
+- **Offen mit dem Betreuer:** Abgabetermin, Umgang mit KI-Nutzung und Selbstständigkeitserklärung, ob für das KI-Protokoll Zitate und Zusammenfassungen statt vollständiger Prompts reichen.
+- Noch keine Simulationslogik (Gravitation, Integrator) implementiert.

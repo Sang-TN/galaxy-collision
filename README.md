@@ -82,6 +82,7 @@ Hinweis: In Umgebungen ohne Bildschirm (z. B. GitHub Codespaces) lässt sich das
 | [docs/theorie.md](docs/theorie.md) | Physikalische und informatische Grundlagen, Herleitungen |
 | [docs/entscheidungen.md](docs/entscheidungen.md) | Entscheidungen mit Alternativen und Begründung |
 | [docs/tests.md](docs/tests.md) | Tests und Messwerte |
+| [docs/uml.md](docs/uml.md) | UML-Klassendiagramme |
 | [docs/projekttagebuch.md](docs/projekttagebuch.md) | Arbeitsprotokoll pro Sitzung |
 | [docs/ki-protokoll.md](docs/ki-protokoll.md) | Kennzeichnung der KI-Nutzung |
 | [docs/quellen.md](docs/quellen.md) | Quellenverzeichnis |
