@@ -248,7 +248,9 @@ Quellenangabe im Literaturverzeichnis: *Anbieter (Jahr), Name des KI-Systems, Mo
   - `viewer.cpp`: `SetTargetFPS(60)` und `DisableCursor()` einmal vor der Schleife, `UpdateCamera(&kamera, CAMERA_FREE)` vor `BeginDrawing` (EVA: erst aktualisieren, dann zeichnen). `CAMERA_ORBITAL` vorgemerkt fürs Backup-Video.
   - Erkannt: Punktwolke ist ein Würfel (Koordinaten unabhängig gleichverteilt), Kugel bräuchte Verwerfungsmethode (Einschränkung in E11)
   - Doku M1 vollständig: `theorie.md` 1–7 (neu: 6.6, 7.1–7.7), `entscheidungen.md` E1–E13, `tests.md` T1–T6 mit Abb. 1–2 (`docs/bilder/m1-gitter.png`, `m1-punktwolke.png`), `uml.md` mit `zuVector3` und Modulabhängigkeiten
-- **Nächster Schritt:** Kolloquiumsfragen zu M1 beantworten (5 Fragen gestellt: AoS/SoA, eigenes Vec3 + Kopplung, range-based for, Game Loop, Würfel/Kugel + DrawSphere-Grenze), Definition of Done prüfen, Merge nach `main`. Danach M2 (Branch `m2-stabile-galaxie`).
+  - Kolloquiumsfragen M1 beantwortet (31.10.2026), Gesamt: gut. Definition of Done erfüllt.
+- **Nächster Schritt:** Branch `m1-punkte-im-raum` nach `main` mergen, dann M2 beginnen (Branch `m2-stabile-galaxie`): Einheiten festlegen, Herleitung der Kreisbahngeschwindigkeit.
+- **Offen fürs Kolloquium (M1, nacharbeiten):** Eigenes `Vec3` nicht mit „Performance“ begründen, sondern mit Unabhängigkeit von raylib (E2, E12). Fachbegriffe Cache-Zeile/räumliche Lokalität bei SoA, Gegenargument für AoS. Draw-Call und Batching als Begründung für die `DrawSphere`-Grenze.
 - **Konventionen:** Klassennamen groß, Dateinamen klein; deutsche Bezeichner (außer `Vec3`, `length()`); private Attribute enden auf `_`.
 - **Offen fürs Kolloquium (M0, später nacharbeiten):** raylib-Vor-/Nachteile, fester Git-Tag, Out-of-Source-Build begründen, Game Loop erklären, Konfigurieren vs. Bauen.
 - **Offen mit dem Betreuer:** Abgabetermin, Umgang mit KI-Nutzung und Selbstständigkeitserklärung, ob für das KI-Protokoll Zitate und Zusammenfassungen statt vollständiger Prompts reichen.
