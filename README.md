@@ -78,6 +78,25 @@ cmake --build build
 
 Hinweis: In Umgebungen ohne Bildschirm (z. B. GitHub Codespaces) lässt sich das Programm bauen, das Fenster öffnet sich aber nicht.
 
+### Windows
+
+Voraussetzungen einmalig installieren (Visual Studio Build Tools mit MSVC-Compiler und CMake):
+
+```
+winget install --id Microsoft.VisualStudio.2022.BuildTools --override "--passive --wait --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
+winget install --id Kitware.CMake
+```
+
+Konfigurieren, bauen und starten (im Ordner `galaxy-collision`):
+
+```
+cmake -S . -B build
+cmake --build build --config Release
+.\build\Release\viewer.exe
+```
+
+Unter Windows wird Debug oder Release erst beim Bauen mit `--config` gewählt. Ohne `--config` wird Debug gebaut, das Programm liegt dann in `build\Debug\`.
+
 ## Dokumentation
 
 | Datei | Inhalt |
