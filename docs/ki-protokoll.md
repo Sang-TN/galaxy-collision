@@ -74,3 +74,12 @@
 - **Ausgabe:** Erklärung von Überladung mit `const`, IntelliSense-Einstellung, Pseudozufall und Seed, `<random>` (Generator, Verteilung), `inline` bei freien Funktionen, unbestimmter Auswertungsreihenfolge von Argumenten, Groß-/Kleinschreibung unter Linux; Rezept und Pseudocode für `zufaelligePunkte`; Hinweise auf Fehler; Texte für `theorie.md` (5.6, 6.1–6.5), E11, T3, `uml.md`
 - **Zweck:** Zugriff auf den Teilchenspeicher und Startpositionen umsetzen, Code-Review, Dokumentation
 - **Eigene Bearbeitung:** Getter, `zufall.hpp` und Test selbst geschrieben; Fehler nach Hinweisen selbst korrigiert; Test zweimal ausgeführt und Ergebnis selbst geprüft; Texte von der KI übernommen, werden in eigenen Worten umgeschrieben
+
+## 31.10.2026 - Kamera und 3D-Modus in raylib
+
+- **KI-System:** Claude Code, Anthropic, Claude Opus 5.5
+- **Datum:** 31.10.2026
+- **Prompt:** „okay claude wir sind mit M1 fast durch es fehlen denke ich noch die punkte im raum oder? schau mal“, Fragen zu den Kamera-Feldern („position wo die kamere halt sich gerade befindet mit target vielleicht was der fokus gerade ist und up soviel wie die höhe?“), zu `BeginMode3D`, `EndMode3D` und `DrawGrid` („was machen die drei“), Bitte um einfachere Erklärung („das ist ein bereich wovon ich wirklich null ahnung bisher habe“), Frage nach Startwerten („was für werte sollte ich nehmen?“)
+- **Ausgabe:** Plan für den Rest von M1 in drei Teilschritten; Erklärung von Kamera, Projektion, Sichtfeld und Up-Vektor; Vergleich der Zeichenschleife mit einem Daumenkino und des 3D-Modus mit einem Fotografen; Startwerte für `Camera3D` mit Begründung; Hinweise auf Fehler (Signatur statt Aufruf, Zeichnen außerhalb der Schleife, falscher Variablenname, Initialisierung mit runden Klammern) statt fertiger Lösung
+- **Zweck:** Grundlagen der 3D-Darstellung in raylib verstehen, Code-Review
+- **Eigene Bearbeitung:** Kamera und Zeichenschleife in `viewer.cpp` selbst geschrieben; Feldreihenfolge von `Camera3D` selbst in `raylib.h` nachgeschlagen; Fehler nach Hinweisen selbst korrigiert; Ergebnis durch Bauen und Starten selbst geprüft (Gitter sichtbar)
