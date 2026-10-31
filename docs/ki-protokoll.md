@@ -92,3 +92,12 @@
 - **Ausgabe:** Erklärung von Kopplung und Abhängigkeitsrichtung (`render/` → `core/`), Headless-Betrieb; PowerShell-Befehl `New-Item`; Erklärung von Rückgabetyp, Include-Pfaden und Aggregat-Initialisierung von `Vector3`; Pseudocode für Umwandlung und Zeichenschleife; Erklärung der bereichsbasierten for-Schleife im Vergleich zu Python und von Kopie vs. `const`-Referenz; Hinweise auf Fehler statt fertiger Lösung; Texte für E12, Projekttagebuch und dieses Protokoll
 - **Zweck:** Punktwolke darstellen, Trennung von Physik und Darstellung verstehen und begründen, Code-Review, Dokumentation
 - **Eigene Bearbeitung:** `umwandlung.hpp` und Zeichenschleife in `viewer.cpp` selbst geschrieben; Fehler nach Hinweisen selbst korrigiert; Ergebnis durch Bauen und Starten selbst geprüft und per Screenshot festgehalten; Texte von der KI übernommen, werden in eigenen Worten umgeschrieben
+
+## 31.10.2026 (3) - Kamerasteuerung, Bildrate und Doku zu M1
+
+- **KI-System:** Claude Code, Anthropic, Claude Opus 5.5
+- **Datum:** 31.10.2026
+- **Prompt:** Antwort auf die Frage nach der Form der Punktwolke („sieht eher aus wie ein würfel“), zu Zeiger und Kopie („weil beginmode3d ja nur eine sache wissen muss … und updatecamera ja jedesmal wissen muss wo die kamera sich befindet“), Vergleich der Kameramodi („orbital dreht sich einfach ohne mein input aber free ist gerade scuffed“), Bitte um Review („so?“, „jetzt?“), Bitte um Ergänzung der Doku mit Screenshots („kannst du das ergänzen in die docs wie theorie, uml, tests mit den screenshots hier, und den restlichen?“)
+- **Ausgabe:** Erklärung der Würfelform und der Verwerfungsmethode; Erklärung von Zeiger, Adressoperator und warum raylib (C) Zeiger statt Referenzen verwendet; EVA-Prinzip in der Game Loop; Ursache des Ruckelns bei `CAMERA_FREE`; Hinweise auf Fehler (Aufruf in jedem Frame, überflüssiges `HideCursor`) statt fertiger Lösung; Kolloquiumsfragen zu M1; Texte für `theorie.md` (6.6, 7.1–7.7), `tests.md` (T4–T6, Abbildungen), `uml.md` (Umwandlung, Modulabhängigkeiten), E11 (Einschränkung), E13, Projekttagebuch und dieses Protokoll
+- **Zweck:** Kamerasteuerung umsetzen, Game Loop verstehen, M1 dokumentieren
+- **Eigene Bearbeitung:** `UpdateCamera`, `SetTargetFPS` und `DisableCursor` selbst eingebaut; Cursor-Funktion selbst im Cheatsheet gefunden; beide Kameramodi selbst ausprobiert und Entscheidung selbst getroffen; Fehler nach Hinweisen selbst korrigiert; Screenshots selbst erstellt; Texte von der KI übernommen, werden in eigenen Worten umgeschrieben

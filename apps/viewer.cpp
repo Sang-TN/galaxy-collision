@@ -19,8 +19,12 @@ int main()
 
     Camera3D kamera{{3.0f, 2.0f, 3.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, 45.0f, CAMERA_PERSPECTIVE};
 
+    SetTargetFPS(60);
+    DisableCursor();
+
     while (!WindowShouldClose())
     {
+        UpdateCamera(&kamera, CAMERA_FREE);
         BeginDrawing();
         ClearBackground(BLACK);
         BeginMode3D(kamera);

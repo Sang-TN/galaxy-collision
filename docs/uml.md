@@ -16,9 +16,32 @@ classDiagram
     Teilchenspeicher "1" *-- "0..*" Vec3 : besteht aus
     class zufall_hpp["«Funktion» zufaelligePunkte"]
     zufall_hpp ..> Teilchenspeicher : füllt
+    class umwandlung_hpp["«Funktion» zuVector3"]
+    class Vector3["«raylib» Vector3"]
+    umwandlung_hpp ..> Vec3 : liest
+    umwandlung_hpp ..> Vector3 : erzeugt
 ```
 
 Der Teilchenspeicher **besteht aus** vielen `Vec3` (Komposition): Die Vektoren gehören zum Speicher und existieren nicht ohne ihn. Die freie Funktion `zufaelligePunkte` (`src/setup/zufall.hpp`) **benutzt** den Teilchenspeicher und füllt ihn.
+
+Die freie Funktion `zuVector3` (`src/render/umwandlung.hpp`) wandelt ein `Vec3` in raylibs `Vector3` um. Die Abhängigkeitspfeile zeigen nur von `render/` zu `core/` und zu raylib, **nie** von `core/` zu raylib (siehe E12).
+
+---
+
+## Module und Abhängigkeiten (M1)
+
+```mermaid
+flowchart LR
+    viewer["apps/viewer.cpp"] --> render["src/render/"]
+    viewer --> setup["src/setup/"]
+    viewer --> core["src/core/"]
+    viewer --> raylib[("raylib")]
+    render --> core
+    render --> raylib
+    setup --> core
+```
+
+Ein Pfeil bedeutet „bindet ein / hängt ab von“. `core/` hat keine ausgehenden Pfeile: Datenhaltung und später Physik lassen sich ohne raylib bauen und testen.
 
 ---
 

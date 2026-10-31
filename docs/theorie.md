@@ -383,3 +383,89 @@ Eine **freie Funktion** (nicht in einer Klasse), die in einem Header definiert w
 ### 6.5 Groß- und Kleinschreibung von Dateinamen
 
 macOS ignoriert Groß- und Kleinschreibung in Dateinamen meist, Linux nicht. `#include "core/Teilchenspeicher.hpp"` findet unter Linux die Datei `teilchenspeicher.hpp` nicht. Konvention im Projekt: **Klassennamen groß** (`Teilchenspeicher`), **Dateinamen klein** (`teilchenspeicher.hpp`).
+
+### 6.6 Würfel statt Kugel
+
+`zufaelligePunkte` zieht x, y und z **unabhängig voneinander** gleichverteilt aus [−r, r]. Damit füllen die Punkte einen **Würfel** mit Kantenlänge 2r, keine Kugel. Ein Punkt wie (0,9; 0,9; 0,9) hat den Abstand √(3 · 0,9²) ≈ 1,56 vom Ursprung und läge außerhalb einer Kugel mit Radius 1.
+
+Eine Kugel erhält man mit der **Verwerfungsmethode** (*rejection sampling*): Punkt im Würfel ziehen, Betrag berechnen, Punkte mit Betrag > r verwerfen und neu ziehen. Für M1 reicht der Würfel, ab M2 liegen die Sterne auf einer Scheibe.
+
+## 7 Darstellung in 3D mit raylib
+
+### 7.1 Game Loop und EVA-Prinzip
+
+Ein Echtzeitprogramm erzeugt in einer Schleife, der **Game Loop**, fortlaufend neue Einzelbilder (**Frames**), vergleichbar mit einem Daumenkino. Jeder Durchlauf folgt dem **EVA-Prinzip**:
+
+1. **Eingabe und Verarbeitung:** Maus und Tastatur lesen, Kamera bewegen, später einen Physik-Schritt rechnen.
+2. **Ausgabe:** Bild löschen (`ClearBackground`) und neu zeichnen, zwischen `BeginDrawing` und `EndDrawing`.
+
+Steht die Verarbeitung vor der Ausgabe, zeigt jedes Bild den aktuellen Zustand. Andernfalls hinkt das Bild einen Frame hinterher. Die Trennung hält außerdem Rechnen und Zeichnen auseinander, passend zur Architektur des Projekts.
+
+`SetTargetFPS(60)` begrenzt die Bildrate auf 60 Bilder pro Sekunde (*frames per second*). Das Programm läuft so auf jedem Rechner gleich schnell und belastet den Prozessor nicht unnötig.
+
+### 7.2 Kamera und Projektion
+
+Der Bildschirm ist zweidimensional, die Punkte liegen im dreidimensionalen Raum. Die **Kamera** ist der virtuelle Beobachter, aus dessen Sicht gezeichnet wird. Die Umrechnung von 3D-Koordinaten auf 2D-Bildschirmpositionen heißt **Projektion**.
+
+| Feld von `Camera3D` | Bedeutung | im Projekt |
+|---|---|---|
+| `position` | Standort der Kamera | (3, 2, 3), schräg oberhalb und außerhalb der Wolke |
+| `target` | Punkt, auf den die Kamera blickt | Ursprung (0, 0, 0) |
+| `up` | Richtungsvektor, der im Bild nach oben zeigt (Drehung um die Blickachse) | (0, 1, 0) |
+| `fovy` | vertikales Sichtfeld (*field of view*) in Grad | 45° |
+| `projection` | Art der Projektion | perspektivisch |
+
+Bei der **perspektivischen Projektion** erscheinen entfernte Objekte kleiner, wie beim menschlichen Auge. Bei der **orthografischen Projektion** bleibt die Größe unabhängig von der Entfernung, was für technische Zeichnungen üblich ist.
+
+`BeginMode3D(kamera)` schaltet in den 3D-Modus: Alle folgenden Zeichenbefehle werden als 3D-Koordinaten verstanden und über die Kamera projiziert. `EndMode3D()` schaltet zurück in den 2D-Modus, z. B. für Text.
+
+### 7.3 Kopie, Referenz und Zeiger beim Funktionsaufruf
+
+| Funktion | Parameter | Warum |
+|---|---|---|
+| `BeginMode3D(Camera3D camera)` | Kopie | liest die Kamera nur |
+| `UpdateCamera(Camera *camera, int mode)` | Zeiger | **verändert** die Kamera; eine Änderung an einer Kopie ginge nach dem Aufruf verloren |
+
+Ein **Zeiger** (*pointer*) enthält die **Adresse** einer Variablen im Speicher. Über ihn kann eine Funktion das Original verändern. Die Adresse erhält man mit dem **Adressoperator** `&`, also `UpdateCamera(&kamera, ...)`. raylib ist in C geschrieben, und C kennt keine Referenzen, deshalb verwendet raylib Zeiger, wo in C++ eine Referenz üblich wäre.
+
+Wichtig ist der Unterschied zwischen **Deklaration** und **Aufruf**: `void BeginMode3D(Camera3D camera);` beschreibt nur, welche Parameter die Funktion erwartet. Aufgerufen wird sie mit einem konkreten Wert, ohne Rückgabetyp und ohne Parametertyp: `BeginMode3D(kamera);`.
+
+### 7.4 Aggregat-Initialisierung
+
+`Camera3D` und `Vector3` sind in raylib einfache C-`struct`s **ohne Konstruktor**, sogenannte **Aggregate**. Sie werden mit geschweiften Klammern befüllt. Die Werte werden dabei der Reihe nach den Feldern zugeordnet, deshalb muss die Reihenfolge der Deklaration in `raylib.h` entsprechen:
+
+```
+Vector3{ x, y, z }
+Camera3D{ position, target, up, fovy, projection }
+```
+
+### 7.5 Bereichsbasierte for-Schleife
+
+Die **bereichsbasierte for-Schleife** (*range-based for loop*) durchläuft alle Elemente eines Bereichs, ähnlich wie `for x in liste` in Python:
+
+```
+for (const Vec3 &p : speicher.positionen())
+```
+
+- `speicher.positionen()` liefert den Bereich (ein `std::span`).
+- `p` ist in jedem Durchlauf das aktuelle Element.
+- `const Vec3 &` bedeutet: Referenz auf das Original, also **keine Kopie**, und **nur lesend**, der Compiler verhindert Änderungen.
+
+Faustregel: nur lesen → `const T &`; ändern → `T &`; kleine Typen wie `int` oder `float` → Kopie.
+
+### 7.6 Trennung von Physik und Darstellung (Kopplung)
+
+raylib zeichnet nur mit seinem eigenen Typ `Vector3`. Die Umwandlung `zuVector3` liegt in `src/render/`, nicht in `src/core/`. Die **Abhängigkeitsrichtung** ist damit festgelegt: `render/` kennt `core/`, aber `core/` kennt weder `render/` noch raylib.
+
+Würde `vec3.hpp` `raylib.h` einbinden, wären alle Teile, die `Vec3` benutzen (Physik, Tests, Headless-Simulation), an die Grafikbibliothek **gekoppelt**. **Geringe Kopplung** macht Module unabhängig baubar, testbar und austauschbar (siehe E12).
+
+### 7.7 Kamerasteuerung
+
+`UpdateCamera` bewegt die Kamera passend zu einem Modus. Im Projekt verglichen:
+
+| Modus | Verhalten | Einsatz |
+|---|---|---|
+| `CAMERA_ORBITAL` | kreist automatisch um das Ziel, ohne Eingabe | gleichmäßige Aufnahme, z. B. Backup-Video |
+| `CAMERA_FREE` | frei steuerbar mit Maus und W/A/S/D | Live-Vorführung, eigene Blickwinkel |
+
+Die Drehung wird aus der **Mausbewegung** zwischen zwei Frames berechnet. Stößt der Mauszeiger an den Fensterrand, kommt keine Bewegung mehr an. `DisableCursor()` versteckt den Zeiger und hält ihn im Fenster fest. Der Aufruf erfolgt **einmal** vor der Game Loop. Beendet wird das Programm dann mit Esc (`WindowShouldClose()`).

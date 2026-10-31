@@ -196,6 +196,8 @@ Benötigte Operationen (Herleitung in `theorie.md`, Abschnitte 3 und 4):
 - Startbedingungen liegen laut Architektur in `src/setup/`.
 **Einschränkung:** Die Umrechnung durch `uniform_real_distribution` unterscheidet sich zwischen Standardbibliotheken. Reproduzierbar ist es auf demselben System (siehe `theorie.md` 6.2).
 
+**Einschränkung:** Da x, y und z unabhängig gezogen werden, bilden die Punkte einen Würfel, keine Kugel (siehe `theorie.md` 6.6, Abb. 2 in `tests.md`). Für M1 ausreichend; eine Kugel ließe sich mit der Verwerfungsmethode erzeugen.
+
 ---
 
 ## E12 – Umwandlung `Vec3` → `Vector3` in `src/render/` (M1)
@@ -212,4 +214,24 @@ Benötigte Operationen (Herleitung in `theorie.md`, Abschnitte 3 und 4):
 - Eine eigene Funktion statt ausgeschriebener Umwandlung in `viewer.cpp` hält die Stelle an einem Ort und ist wiederverwendbar.
 - Parameter als `const Vec3 &`: nur lesen, keine Kopie. Rückgabe von `Vector3` per Aggregat-Initialisierung `{ }`, da `Vector3` ein C-`struct` ohne Konstruktor ist.
 - `inline`, weil die Funktion in einem Header definiert ist und sonst bei mehrfachem Einbinden gegen die One-Definition-Rule verstoßen würde.
+
+---
+
+## E13 – Kamerasteuerung mit `CAMERA_FREE` und gefangenem Mauszeiger (M1)
+
+**Entscheidung:** Der Viewer verwendet `UpdateCamera(&kamera, CAMERA_FREE)`. Vor der Game Loop werden einmal `SetTargetFPS(60)` und `DisableCursor()` aufgerufen. `UpdateCamera` steht in der Schleife vor `BeginDrawing`.
+
+**Alternativen:**
+- `CAMERA_ORBITAL` (dreht automatisch um das Ziel)
+- feste Kamera ohne Steuerung
+- eigene Kamerasteuerung (z. B. Drehen um den Ursprung per Mausziehen)
+**Begründung:**
+- Bei der Live-Vorführung soll der Vortragende selbst bestimmen, was gezeigt wird, z. B. einen Gezeitenarm von der Seite. Das geht nur mit Steuerung durch den Benutzer.
+- `CAMERA_ORBITAL` bleibt für das Backup-Video vorgemerkt, weil die gleichmäßige Drehung dort ruhiger wirkt.
+- Eine eigene Steuerung wäre für M1 Overkill, die eingebaute Funktion reicht.
+- `DisableCursor()` verhindert, dass der Mauszeiger am Fensterrand anstößt und die Kamera ruckelt (T6). Einmaliger Aufruf vor der Schleife genügt, der Zustand bleibt erhalten.
+- `UpdateCamera` vor `BeginDrawing` (EVA-Prinzip): Jedes Bild zeigt die aktuelle Kameraposition (siehe `theorie.md` 7.1).
+- `SetTargetFPS(60)` sorgt für eine gleichmäßige Bildrate und begrenzt die Prozessorlast.
+
+**Einschränkung:** Mit gefangenem Mauszeiger ist das Schließen-Kreuz nicht erreichbar, beendet wird mit Esc.
 

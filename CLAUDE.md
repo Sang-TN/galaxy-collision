@@ -245,7 +245,10 @@ Quellenangabe im Literaturverzeichnis: *Anbieter (Jahr), Name des KI-Systems, Mo
   - `viewer.cpp`: 500 Punkte per range-based for (`const Vec3 &`) als `DrawSphere(…, 0.01f, WHITE)` gezeichnet
   - Screenshots der Fenster für die Doku (Vorschlag: `docs/bilder/`)
   - Doku: `entscheidungen.md` E12 (Umwandlung in `render/`, Abhängigkeitsrichtung), Tagebuch und KI-Protokoll bis 31.10.2026 nachgetragen
-- **Nächster Schritt:** Kamera drehbar machen (Maus/Tastatur) und Bildrate festlegen. Dann Kolloquiumsfragen zu M1, Definition of Done prüfen, Merge nach `main`.
+  - `viewer.cpp`: `SetTargetFPS(60)` und `DisableCursor()` einmal vor der Schleife, `UpdateCamera(&kamera, CAMERA_FREE)` vor `BeginDrawing` (EVA: erst aktualisieren, dann zeichnen). `CAMERA_ORBITAL` vorgemerkt fürs Backup-Video.
+  - Erkannt: Punktwolke ist ein Würfel (Koordinaten unabhängig gleichverteilt), Kugel bräuchte Verwerfungsmethode (Einschränkung in E11)
+  - Doku M1 vollständig: `theorie.md` 1–7 (neu: 6.6, 7.1–7.7), `entscheidungen.md` E1–E13, `tests.md` T1–T6 mit Abb. 1–2 (`docs/bilder/m1-gitter.png`, `m1-punktwolke.png`), `uml.md` mit `zuVector3` und Modulabhängigkeiten
+- **Nächster Schritt:** Kolloquiumsfragen zu M1 beantworten (5 Fragen gestellt: AoS/SoA, eigenes Vec3 + Kopplung, range-based for, Game Loop, Würfel/Kugel + DrawSphere-Grenze), Definition of Done prüfen, Merge nach `main`. Danach M2 (Branch `m2-stabile-galaxie`).
 - **Konventionen:** Klassennamen groß, Dateinamen klein; deutsche Bezeichner (außer `Vec3`, `length()`); private Attribute enden auf `_`.
 - **Offen fürs Kolloquium (M0, später nacharbeiten):** raylib-Vor-/Nachteile, fester Git-Tag, Out-of-Source-Build begründen, Game Loop erklären, Konfigurieren vs. Bauen.
 - **Offen mit dem Betreuer:** Abgabetermin, Umgang mit KI-Nutzung und Selbstständigkeitserklärung, ob für das KI-Protokoll Zitate und Zusammenfassungen statt vollständiger Prompts reichen.
