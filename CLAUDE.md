@@ -233,7 +233,7 @@ Quellenangabe im Literaturverzeichnis: *Anbieter (Jahr), Name des KI-Systems, Mo
 ## 11. Aktueller Stand
 
 - **M0 abgeschlossen (17.10.2026).** GitHub-Repo `Sang-TN/galaxy-collision`, CMake-Projekt (C++20), raylib 5.5 per FetchContent, `viewer` öffnet ein schwarzes 1280×720-Fenster.
-- **M1 läuft (Branch `m1-punkte-im-raum`, noch nicht nach `main` gemergt).** Erledigt:
+- **M1 abgeschlossen (31.10.2026),** per Pull Request #1 nach `main` gemergt. Erledigt:
   - `src/core/vec3.hpp`: Klasse `Vec3` (header-only, `float`, `public` Attribute mit Startwert 0, `operator+ - * /`, `length()`)
   - `src/core/teilchenspeicher.hpp`: Klasse `Teilchenspeicher` als Struct of Arrays (`private` Listen `positionen_`, `geschwindigkeiten_`, `beschleunigungen_`; `hinzufuegen`, `anzahl`, `positionen()` als `std::span` mit und ohne `const`)
   - `src/setup/zufall.hpp`: freie Funktion `zufaelligePunkte(speicher, anzahl, radius, seed)` mit `std::mt19937` und festem Seed
@@ -249,7 +249,7 @@ Quellenangabe im Literaturverzeichnis: *Anbieter (Jahr), Name des KI-Systems, Mo
   - Erkannt: Punktwolke ist ein Würfel (Koordinaten unabhängig gleichverteilt), Kugel bräuchte Verwerfungsmethode (Einschränkung in E11)
   - Doku M1 vollständig: `theorie.md` 1–7 (neu: 6.6, 7.1–7.7), `entscheidungen.md` E1–E13, `tests.md` T1–T6 mit Abb. 1–2 (`docs/bilder/m1-gitter.png`, `m1-punktwolke.png`), `uml.md` mit `zuVector3` und Modulabhängigkeiten
   - Kolloquiumsfragen M1 beantwortet (31.10.2026), Gesamt: gut. Definition of Done erfüllt.
-- **Nächster Schritt:** Branch `m1-punkte-im-raum` nach `main` mergen, dann M2 beginnen (Branch `m2-stabile-galaxie`): Einheiten festlegen, Herleitung der Kreisbahngeschwindigkeit.
+- **Nächster Schritt:** M2 beginnen (Branch `m2-stabile-galaxie`): Einheiten festlegen, Herleitung der Kreisbahngeschwindigkeit.
 - **Offen fürs Kolloquium (M1, nacharbeiten):** Eigenes `Vec3` nicht mit „Performance“ begründen, sondern mit Unabhängigkeit von raylib (E2, E12). Fachbegriffe Cache-Zeile/räumliche Lokalität bei SoA, Gegenargument für AoS. Draw-Call und Batching als Begründung für die `DrawSphere`-Grenze.
 - **Konventionen:** Klassennamen groß, Dateinamen klein; deutsche Bezeichner (außer `Vec3`, `length()`); private Attribute enden auf `_`.
 - **Offen fürs Kolloquium (M0, später nacharbeiten):** raylib-Vor-/Nachteile, fester Git-Tag, Out-of-Source-Build begründen, Game Loop erklären, Konfigurieren vs. Bauen.
