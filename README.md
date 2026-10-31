@@ -4,7 +4,9 @@ Eine 3D-N-Körper-Simulation in C++ mit raylib: Zwei Scheibengalaxien kollidiere
 
 Abschlussprojekt zum staatlich geprüften IT-Assistenten an der Höheren Berufsfachschule Informationstechnik, BBS 1 Mainz.
 
-> **Stand:** M0 (Setup) ist abgeschlossen, M1 (Punkte im Raum) läuft. Die Vektorklasse `Vec3` ist fertig und getestet, eine Simulation gibt es noch nicht.
+> **Stand:** M0 (Setup) und M1 (Punkte im Raum) sind abgeschlossen: 500 zufällige Punkte werden in 3D mit frei steuerbarer Kamera dargestellt. Als Nächstes folgt M2 (eine stabile Galaxie). Eine Simulation gibt es noch nicht.
+
+![Zufällige Punktwolke aus 500 Punkten über einem Gitter](docs/bilder/m1-punktwolke.png)
 
 ## Worum es geht
 
@@ -23,8 +25,8 @@ Der Schwerpunkt liegt auf der Informatik: Algorithmen, Datenstrukturen, Laufzeit
 
 ## Meilensteine
 
-- [ ] **M0 – Setup:** Git, CMake, raylib, ein leeres Fenster
-- [ ] **M1 – Punkte im Raum:** eigene `Vec3`-Klasse, Teilchenspeicher, drehbare Kamera
+- [x] **M0 – Setup:** Git, CMake, raylib, ein leeres Fenster
+- [x] **M1 – Punkte im Raum:** eigene `Vec3`-Klasse, Teilchenspeicher, drehbare Kamera
 - [ ] **M2 – Eine stabile Galaxie:** Teststerne auf Kreisbahnen um ein Zentrum
 - [ ] **M3 – Toomre-Kollision:** zwei Galaxien, prograde und retrograde Szenarien
 - [ ] **M4 – Brute-Force-Eigengravitation:** mit Energieüberwachung
@@ -44,16 +46,21 @@ Der Schwerpunkt liegt auf der Informatik: Algorithmen, Datenstrukturen, Laufzeit
 
 ```
 galaxy-collision/
-├── CMakeLists.txt     # Build-Konfiguration, bindet raylib per FetchContent ein
+├── CMakeLists.txt            # Build-Konfiguration, bindet raylib per FetchContent ein
 ├── apps/
-│   └── viewer.cpp     # Programm mit Fenster (Live-Ansicht)
+│   └── viewer.cpp            # Programm mit Fenster (Live-Ansicht)
 ├── src/
-│   └── core/
-│       └── vec3.hpp   # Vektorklasse für Positionen, Geschwindigkeiten, Beschleunigungen
-└── docs/              # Dokumentation (siehe unten)
+│   ├── core/
+│   │   ├── vec3.hpp          # Vektorklasse für Positionen, Geschwindigkeiten, Beschleunigungen
+│   │   └── teilchenspeicher.hpp  # Speicher aller Sterne (Struct of Arrays)
+│   ├── setup/
+│   │   └── zufall.hpp        # Zufällige Startpositionen mit festem Seed
+│   └── render/
+│       └── umwandlung.hpp    # Umwandlung Vec3 → raylib Vector3 (core/ bleibt unabhängig von raylib)
+└── docs/                     # Dokumentation (siehe unten), Screenshots in docs/bilder/
 ```
 
-Geplant sind weitere Module unter `src/`: `physics/` (Kraftberechnung), `integrator/` (Zeitschritte), `setup/` (Startbedingungen), `io/` (Snapshots) und `render/` (Darstellung), außerdem `tests/` und `bench/`.
+Geplant sind weitere Module unter `src/`: `physics/` (Kraftberechnung), `integrator/` (Zeitschritte) und `io/` (Snapshots), außerdem `tests/` und `bench/`.
 
 ## Bauen und Starten
 
@@ -74,6 +81,29 @@ cmake --build build
 ```
 
 Hinweis: In Umgebungen ohne Bildschirm (z. B. GitHub Codespaces) lässt sich das Programm bauen, das Fenster öffnet sich aber nicht.
+
+### Windows
+
+Voraussetzungen einmalig installieren (Visual Studio Build Tools mit MSVC-Compiler und CMake):
+
+```
+winget install --id Microsoft.VisualStudio.2022.BuildTools --override "--passive --wait --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
+winget install --id Kitware.CMake
+```
+
+Konfigurieren, bauen und starten (im Ordner `galaxy-collision`):
+
+```
+cmake -S . -B build
+cmake --build build --config Release
+.\build\Release\viewer.exe
+```
+
+Unter Windows wird Debug oder Release erst beim Bauen mit `--config` gewählt. Ohne `--config` wird Debug gebaut, das Programm liegt dann in `build\Debug\`.
+
+### Steuerung
+
+Maus: umsehen · W/A/S/D: bewegen · Esc: beenden (der Mauszeiger ist im Fenster gefangen)
 
 ## Dokumentation
 
