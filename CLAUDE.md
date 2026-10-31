@@ -249,9 +249,15 @@ Quellenangabe im Literaturverzeichnis: *Anbieter (Jahr), Name des KI-Systems, Mo
   - Erkannt: Punktwolke ist ein Würfel (Koordinaten unabhängig gleichverteilt), Kugel bräuchte Verwerfungsmethode (Einschränkung in E11)
   - Doku M1 vollständig: `theorie.md` 1–7 (neu: 6.6, 7.1–7.7), `entscheidungen.md` E1–E13, `tests.md` T1–T6 mit Abb. 1–2 (`docs/bilder/m1-gitter.png`, `m1-punktwolke.png`), `uml.md` mit `zuVector3` und Modulabhängigkeiten
   - Kolloquiumsfragen M1 beantwortet (31.10.2026), Gesamt: gut. Definition of Done erfüllt.
-- **Nächster Schritt:** M2 beginnen (Branch `m2-stabile-galaxie`): Einheiten festlegen, Herleitung der Kreisbahngeschwindigkeit.
+- **Nach M1 (31.10.2026):** README beim Merge verloren (Konflikt zugunsten alter `main`-Version aufgelöst, Windows-Anleitung weg), aus `9d3ad38` wiederhergestellt und auf Stand M1 gebracht (Screenshot, Steuerung). Per kleinem PR von `m2-stabile-galaxie` nach `main`; Branch danach **nicht** löschen, sondern für M2 weiterverwenden. Regel: Dateien nicht direkt auf github.com bearbeiten, bei „Resolve conflicts“ vorher gemeinsam prüfen.
+- **Nächste Schritte (M2, Branch `m2-stabile-galaxie`), in dieser Reihenfolge:**
+  1. **doctest einrichten** (FetchContent, Ordner `tests/`, eigenes Test-Target ohne raylib) und T1–T3 als echte Tests umschreiben; provisorische `std::cout`-Tests aus `viewer.cpp` entfernen.
+  2. **CI mit GitHub Actions** (`.github/workflows/ci.yml`, Vorbild: Tiens Repo `kafka-market-stream` mit Maven/JUnit 5/`mvn test`): auf Ubuntu bei Push/PR konfigurieren, bauen, `ctest`. Möglichst nur das Test-Target bauen (kein raylib/X11 nötig). CI-Badge in README.
+  3. **Lizenz:** `LICENSE` mit MIT (wie im Kafka-Projekt), Begründung als E14 (freizügig, verträglich mit raylibs zlib-Lizenz). Vorher Betreuer fragen.
+  4. Dann M2 inhaltlich: Einheiten festlegen, Herleitung der Kreisbahngeschwindigkeit.
+- **Fürs Kolloquium vorgemerkt:** Verknüpfung mit anderen Themen: dasselbe Vorgehen (Unit-Tests, CI) in Java/Maven (Kafka-Projekt) und C++/CMake.
 - **Offen fürs Kolloquium (M1, nacharbeiten):** Eigenes `Vec3` nicht mit „Performance“ begründen, sondern mit Unabhängigkeit von raylib (E2, E12). Fachbegriffe Cache-Zeile/räumliche Lokalität bei SoA, Gegenargument für AoS. Draw-Call und Batching als Begründung für die `DrawSphere`-Grenze.
 - **Konventionen:** Klassennamen groß, Dateinamen klein; deutsche Bezeichner (außer `Vec3`, `length()`); private Attribute enden auf `_`.
 - **Offen fürs Kolloquium (M0, später nacharbeiten):** raylib-Vor-/Nachteile, fester Git-Tag, Out-of-Source-Build begründen, Game Loop erklären, Konfigurieren vs. Bauen.
-- **Offen mit dem Betreuer:** Abgabetermin, Umgang mit KI-Nutzung und Selbstständigkeitserklärung, ob für das KI-Protokoll Zitate und Zusammenfassungen statt vollständiger Prompts reichen.
+- **Offen mit dem Betreuer:** Abgabetermin, Umgang mit KI-Nutzung und Selbstständigkeitserklärung, ob für das KI-Protokoll Zitate und Zusammenfassungen statt vollständiger Prompts reichen, ob das öffentliche Repo unter MIT-Lizenz veröffentlicht werden darf.
 - Noch keine Simulationslogik (Gravitation, Integrator) implementiert.
