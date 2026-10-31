@@ -240,7 +240,8 @@ Quellenangabe im Literaturverzeichnis: *Anbieter (Jahr), Name des KI-Systems, Mo
   - CMake: `target_include_directories(viewer PRIVATE ${CMAKE_SOURCE_DIR}/src)`, Includes mit Modulpfad (`core/…`, `setup/…`)
   - Provisorische Tests T1–T3 über `std::cout` in `viewer.cpp` (siehe `docs/tests.md`)
   - Doku: `theorie.md` Abschnitte 1–6, `entscheidungen.md` E1–E11, `uml.md`, `tests.md`
-- **Nächster Schritt (auf dem Mac):** Die zufälligen Punkte in raylib zeichnen, mit drehbarer Kamera (`Camera3D`). Danach Kolloquiumsfragen zu M1, Definition of Done prüfen, Merge nach `main`.
+  - `viewer.cpp`: `Camera3D` (Position (3,2,3), Ziel Ursprung, perspektivisch, fovy 45) und `DrawGrid(10, 0.5f)` im 3D-Modus, Gitter wird angezeigt
+- **Nächster Schritt:** Die zufälligen Punkte im 3D-Modus zeichnen (Umwandlung `Vec3` → raylib `Vector3`, Ort dafür klären: `src/render/`). Danach Kamera drehbar machen und Bildrate festlegen, dann Kolloquiumsfragen zu M1, Definition of Done prüfen, Merge nach `main`.
 - **Konventionen:** Klassennamen groß, Dateinamen klein; deutsche Bezeichner (außer `Vec3`, `length()`); private Attribute enden auf `_`.
 - **Offen fürs Kolloquium (M0, später nacharbeiten):** raylib-Vor-/Nachteile, fester Git-Tag, Out-of-Source-Build begründen, Game Loop erklären, Konfigurieren vs. Bauen.
 - **Offen mit dem Betreuer:** Abgabetermin, Umgang mit KI-Nutzung und Selbstständigkeitserklärung, ob für das KI-Protokoll Zitate und Zusammenfassungen statt vollständiger Prompts reichen.

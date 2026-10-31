@@ -17,10 +17,15 @@ int main()
 
     InitWindow(1280, 720, "Galaxienkollision");
 
+    Camera3D kamera{{3.0f, 2.0f, 3.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, 45.0f, CAMERA_PERSPECTIVE};
+
     while (!WindowShouldClose())
     {
         BeginDrawing();
         ClearBackground(BLACK);
+        BeginMode3D(kamera);
+        DrawGrid(10, 0.5f);
+        EndMode3D();
         EndDrawing();
     }
 
