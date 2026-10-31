@@ -4,7 +4,7 @@ Eine 3D-N-Körper-Simulation in C++ mit raylib: Zwei Scheibengalaxien kollidiere
 
 Abschlussprojekt zum staatlich geprüften IT-Assistenten an der Höheren Berufsfachschule Informationstechnik, BBS 1 Mainz.
 
-> **Stand:** M0 (Setup) ist abgeschlossen. M1 (Punkte im Raum) ist bis auf die Darstellung fertig: Vektorklasse `Vec3`, Teilchenspeicher und zufällige Punktwolke sind umgesetzt und getestet. Eine Simulation gibt es noch nicht.
+> **Stand:** M0 (Setup) ist abgeschlossen, M1 (Punkte im Raum) läuft. Die Vektorklasse `Vec3` ist fertig und getestet, eine Simulation gibt es noch nicht.
 
 ## Worum es geht
 
@@ -44,19 +44,16 @@ Der Schwerpunkt liegt auf der Informatik: Algorithmen, Datenstrukturen, Laufzeit
 
 ```
 galaxy-collision/
-├── CMakeLists.txt            # Build-Konfiguration, bindet raylib per FetchContent ein
+├── CMakeLists.txt     # Build-Konfiguration, bindet raylib per FetchContent ein
 ├── apps/
-│   └── viewer.cpp            # Programm mit Fenster (Live-Ansicht)
+│   └── viewer.cpp     # Programm mit Fenster (Live-Ansicht)
 ├── src/
-│   ├── core/
-│   │   ├── vec3.hpp          # Vektorklasse für Positionen, Geschwindigkeiten, Beschleunigungen
-│   │   └── teilchenspeicher.hpp  # Speicher aller Sterne (Struct of Arrays)
-│   └── setup/
-│       └── zufall.hpp        # Zufällige Startpositionen mit festem Seed
-└── docs/                     # Dokumentation (siehe unten)
+│   └── core/
+│       └── vec3.hpp   # Vektorklasse für Positionen, Geschwindigkeiten, Beschleunigungen
+└── docs/              # Dokumentation (siehe unten)
 ```
 
-Geplant sind weitere Module unter `src/`: `physics/` (Kraftberechnung), `integrator/` (Zeitschritte), `io/` (Snapshots) und `render/` (Darstellung), außerdem `tests/` und `bench/`.
+Geplant sind weitere Module unter `src/`: `physics/` (Kraftberechnung), `integrator/` (Zeitschritte), `setup/` (Startbedingungen), `io/` (Snapshots) und `render/` (Darstellung), außerdem `tests/` und `bench/`.
 
 ## Bauen und Starten
 
@@ -77,25 +74,6 @@ cmake --build build
 ```
 
 Hinweis: In Umgebungen ohne Bildschirm (z. B. GitHub Codespaces) lässt sich das Programm bauen, das Fenster öffnet sich aber nicht.
-
-### Windows
-
-Voraussetzungen einmalig installieren (Visual Studio Build Tools mit MSVC-Compiler und CMake):
-
-```
-winget install --id Microsoft.VisualStudio.2022.BuildTools --override "--passive --wait --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
-winget install --id Kitware.CMake
-```
-
-Konfigurieren, bauen und starten (im Ordner `galaxy-collision`):
-
-```
-cmake -S . -B build
-cmake --build build --config Release
-.\build\Release\viewer.exe
-```
-
-Unter Windows wird Debug oder Release erst beim Bauen mit `--config` gewählt. Ohne `--config` wird Debug gebaut, das Programm liegt dann in `build\Debug\`.
 
 ## Dokumentation
 
